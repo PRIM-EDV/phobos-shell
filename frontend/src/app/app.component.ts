@@ -1,5 +1,15 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+// import { EventEmitter2 } from 'eventemitter2';
+import  EventEmitter2  from 'eventemitter2';
+
+declare global {
+  interface Window { 
+    emitter: EventEmitter2;
+  }
+}
+
+window.emitter = new EventEmitter2();
 
 @Component({
   selector: 'app-root',
@@ -10,4 +20,8 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'phobos-shell';
+
+  constructor() {
+    
+  }
 }
