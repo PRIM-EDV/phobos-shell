@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { AuthService } from './auth/auth.service';
 // import { EventEmitter2 } from 'eventemitter2';
-import  EventEmitter2  from 'eventemitter2';
 
 declare global {
-  interface Window { 
-    emitter: EventEmitter2;
+  interface Window {
+    __env: {
+      phobosAuthUrl: string,
+    }
   }
 }
-
-window.emitter = new EventEmitter2();
 
 @Component({
   selector: 'app-root',
@@ -21,7 +21,9 @@ window.emitter = new EventEmitter2();
 export class AppComponent {
   title = 'phobos-shell';
 
-  constructor() {
+  constructor(
+    private readonly auth: AuthService
+  ) {
     
   }
 }

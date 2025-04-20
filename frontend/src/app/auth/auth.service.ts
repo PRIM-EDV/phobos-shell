@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal, WritableSignal } from '@angular/core';
 
+const PHOBOS_AUTH_URL = window.__env.phobosAuthUrl ? window.__env.phobosAuthUrl : 'http://localhost:3100';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -10,7 +12,9 @@ export class AuthService {
 
   private codeVerifier: string = '';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.authenticate()
+   }
 
   public async authenticate(): Promise<void> {
     const urlParams = new URLSearchParams(window.location.search);
@@ -19,16 +23,8 @@ export class AuthService {
 
     // Check if the url contains a code parameter
     const code = urlParams.get('code');
-    if (code) {
-      // If the code is present, exchange it for an access token
-      try {
-        const accessToken = await this.getAccessToken(code);
-        console.log('Access Token:', accessToken);
-      } catch (error) {
-        console.error('Error exchanging code for access token:', error);
-      }
-    }
 
+    console.log("Auth")
     // If not, start the OAuth2 authorization flow
     await this.startOauthSession();
   }
@@ -37,11 +33,14 @@ export class AuthService {
     const clientId = 'webapp';
     const codeVerifier = this.generateCodeVerifier(128);
     const codeChallenge = this.generateCodeChallenge(codeVerifier);
-    const url = `${window.location.origin}/api/oauth2/authoirize?response_type=code&client_id=${clientId}&code_challenge_method=S256&code_challenge=${codeChallenge}`;
+    const url = `${PHOBOS_AUTH_URL}/auth/authorize?response_type=code&client_id=${clientId}&code_challenge_method=S256&code_challenge=${codeChallenge}`;
 
-    await this.http.get<any>(url, { withCredentials: true }).toPromise();
+    
+    // console.log(await this.http.get<any>(url).toPromise());
 
-    this.codeVerifier = codeVerifier;
+    // this.codeVerifier = codeVerifier;
+    sessionStorage.setItem("codeVerifier", codeVerifier);
+    window.location.href = url;
   }
 
   public async getAccessToken(code: string): Promise<string> {
