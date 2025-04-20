@@ -1,0 +1,15 @@
+
+services:
+  server:
+    image: prim/phobos-shell:1.0.0
+    build:
+      context: "."
+    restart: always
+    container_name: "phobos-shell"
+    ports:
+      - "3000:3000"
+    environment:
+      - PHOBOS_AUTH_URL={ PHOBOS_AUTH_URL }
+
+
+    
