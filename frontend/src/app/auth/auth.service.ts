@@ -1,84 +1,112 @@
+/**
+ * Authentication service that manages user authentication via OAuth2 with PKCE flow.
+ * 
+ * This service is responsible for:
+ * - Tracking the user's authentication state
+ * - Initiating the OAuth2 authorization code flow with PKCE
+ * - Handling OAuth2 redirects after successful authentication
+ * 
+ * It works with an external authorization server defined by PHOBOS_AUTH_URL
+ * environment variable.
+ */
 import { HttpClient } from '@angular/common/http';
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { computed, effect, Injectable, Signal } from '@angular/core';
+import { TokenService } from './token.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PkceService } from './pkce.service';
 
 const PHOBOS_AUTH_URL = window.__env.phobosAuthUrl ? window.__env.phobosAuthUrl : 'http://localhost:3100';
+const clientId = 'webapp';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  
+  public isAuthenticated: Signal<boolean> = computed(() => {
+    const accessToken = this.tokenService.accessToken();
+    return accessToken !== null && accessToken !== undefined && accessToken !== '';
+  });
 
-  public isAuthenticated: WritableSignal<boolean> = signal(false);
+  private autoAuthentication = effect(async () => {
+    if (!this.isAuthenticated()) {
+      await this.authenticate();
+    }
+  })
 
-  private codeVerifier: string = '';
+  constructor(
+    private readonly http: HttpClient,
+    private readonly pkce: PkceService,
+    private readonly tokenService: TokenService,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+   ) { }
 
-  constructor(private http: HttpClient) {
-    this.authenticate()
-   }
-
+  /**
+   * Authenticates the user.
+   */
   public async authenticate(): Promise<void> {
-    const urlParams = new URLSearchParams(window.location.search);
-
-    // Check if the user is already authenticated
-
-    // Check if the url contains a code parameter
-    const code = urlParams.get('code');
-
-    console.log("Auth")
-    // If not, start the OAuth2 authorization flow
-    await this.startOauthSession();
+    if (this.isAuthenticated()) {
+      return;
+    } else if (this.isOAuthRedirect()) {
+      await this.handleOAuthRedirect();
+    } else {
+      await this.startOAuthFlow();
+    }
   }
 
-  public async startOauthSession(): Promise<void> {
-    const clientId = 'webapp';
-    const codeVerifier = this.generateCodeVerifier(128);
-    const codeChallenge = this.generateCodeChallenge(codeVerifier);
-    const url = `${PHOBOS_AUTH_URL}/auth/authorize?response_type=code&client_id=${clientId}&code_challenge_method=S256&code_challenge=${codeChallenge}`;
+  /**
+   * Handles the OAuth2 redirect after the user has authorized the application.
+   * 
+   * Retrieves the authorization code and verifier from the URL and session storage,
+   * then requests an access token using these values.
+   */
+  public async handleOAuthRedirect(): Promise<void> {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const verifier = sessionStorage.getItem("pkce.verifier");
 
+    if (code && verifier) {
+      await this.removeQueryParams();
+      await this.tokenService.requestAccessToken(code, verifier);
+    } else {
+      throw new Error('Invalid OAuth redirect: missing code or verifier');
+    }
+  }
+
+
+  /**
+   * Starts the OAuth2 authorization flow.
+   * 
+   * Generates a code verifier and challenge, stores the verifier in session storage,
+   * and redirects the user to the authorization URL.
+   */
+  public async startOAuthFlow(): Promise<void> {
+    const verifier = this.pkce.generateCodeVerifier(128);
+    const challenge = await this.pkce.generateCodeChallenge(verifier);
+    sessionStorage.setItem("pkce.verifier", verifier);
     
-    // console.log(await this.http.get<any>(url).toPromise());
-
-    // this.codeVerifier = codeVerifier;
-    sessionStorage.setItem("codeVerifier", codeVerifier);
+    const redirectUri = encodeURI(window.location.origin);
+    const url = `${PHOBOS_AUTH_URL}/auth/authorize?response_type=code&client_id=${clientId}&code_challenge_method=S256&code_challenge=${challenge}&redirect_uri=${redirectUri}`;
+    
     window.location.href = url;
   }
 
-  public async getAccessToken(code: string): Promise<string> {
-    const clientId = 'webapp';
-    const url = `${window.location.origin}/api/oauth2/token`;
-    const body = new URLSearchParams({
-      grant_type: 'authorization_code',
-      code: code,
-      redirect_uri: window.location.origin,
-      client_id: clientId,
-      code_verifier: this.codeVerifier
+  private isOAuthRedirect(): boolean {
+    const urlParams = new URLSearchParams(window.location.search);
+    return !!urlParams.get('code');
+  }
+
+  /**
+   * Removes the query parameters from the URL.
+   * 
+   * Clears the URL of any query parameters after the OAuth2 redirect.
+   */
+  private async removeQueryParams(): Promise<void> {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: [],
+      replaceUrl: true,
     });
-
-    const response = await this.http.post<any>(url, body.toString(), { withCredentials: true }).toPromise();
-
-    return response.access_token;
-  }
-
-  private generateCodeVerifier(length: number = 128): string {
-    const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
-    const randomValues = new Uint8Array(length);
-    
-    crypto.getRandomValues(randomValues);
-  
-    return Array.from(randomValues)
-      .map(byte => charset[byte % charset.length])  // Wähle Zeichen aus charset basierend auf Zufallswert
-      .join('');
-  }
-  
-
-  private async generateCodeChallenge(codeVerifier: string): Promise<string> {
-    const encoder = new TextEncoder();
-    const encodedVerifier = encoder.encode(codeVerifier);
-
-    // SHA-256 Hashing
-    const hashBuffer = await crypto.subtle.digest('SHA-256', encodedVerifier);
-    const base64url = btoa(String.fromCharCode(...new Uint8Array(hashBuffer))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-
-    return base64url;
   }
 }
