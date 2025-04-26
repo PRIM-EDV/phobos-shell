@@ -20,8 +20,8 @@ const PHOBOS_AUTH_URL = window.__env.phobosAuthUrl ? window.__env.phobosAuthUrl 
 })
 export class TokenService {
 
-  public accessToken: WritableSignal<string | null> = signal(null);
-  public refreshToken: WritableSignal<string | null> = signal(null);
+  public accessToken: WritableSignal<string | null> = signal(localStorage.getItem('access.token'));
+  public refreshToken: WritableSignal<string | null> = signal(localStorage.getItem('refresh.token'));
 
   syncAccessToken = this.localStorageSyncEffect(this.accessToken, 'access.token');
   syncRefreshToken = this.localStorageSyncEffect(this.refreshToken, 'refresh.token');
@@ -61,7 +61,12 @@ export class TokenService {
    */
   private localStorageSyncEffect(signal: WritableSignal<string | null>, key: string) {
     return effect(() => {
-      localStorage.setItem(key, JSON.stringify(signal()));
+      if (signal() === null) {
+        localStorage.removeItem(key);
+        return;
+      } else {
+        localStorage.setItem(key, signal() as string);
+      }
     });
   }
   
