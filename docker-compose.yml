@@ -7,9 +7,9 @@ services:
     restart: always
     container_name: "phobos-shell"
     ports:
-      - "3000:3000"
+      - "${PHOBOS_SHELL_PORT:-3001}:3001"
     environment:
-      - PHOBOS_AUTH_URL={ PHOBOS_AUTH_URL }
+      - PHOBOS_AUTH_URL={PHOBOS_AUTH_URL}
 
 
     
