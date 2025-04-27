@@ -1,0 +1,31 @@
+:host {
+    position: absolute;
+    top:0; bottom: 0; left: 0; right: 0;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    grid-template-rows: 32px 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+
+    position: absolute;
+    inset: 0;
+}
+
+
+
+div.content {
+    grid-row: 2;
+    grid-column: 2;
+    display: flex;
+    margin: 24px;
+    align-items: stretch;
+    overflow: hidden;
+
+    div.workspace {
+        display: flex;
+    flex-grow: 1;
+        //grid-auto-rows: 24px;
+        //grid-auto-columns: 24px;
+    }
+}
