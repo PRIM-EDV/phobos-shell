@@ -1,13 +1,15 @@
 
 <ph-topbar style="grid-row: 1; grid-column: 2;">
     <ph-topbar-header [title]="view" [subtitle]="tab"></ph-topbar-header>
-    <ph-topbar-item [label]="'MAP'" (click)="this.tab='MAP'"></ph-topbar-item>
-    <ph-topbar-item [label]="'SQUAD'" (click)="this.tab='SQUAD'"></ph-topbar-item>
+    @if (this.view == 'TACOP') {
+        <ph-topbar-item [label]="'MAP'" (click)="this.tab='MAP'"></ph-topbar-item>
+        <ph-topbar-item [label]="'SQUAD'" (click)="this.tab='SQUAD'"></ph-topbar-item>
+    }
+
 </ph-topbar>
 <ph-sidebar [icon]="'/images/phoenix.svg'" style="grid-row: 1 / 3; grid-column: 1;">
-    <ph-sidebar-item>
-        TACOP
-    </ph-sidebar-item>
+    <ph-sidebar-item (click)="this.view = 'TACOP'"> TACOP </ph-sidebar-item>
+    <ph-sidebar-item (click)="this.view = 'SL'"> SL </ph-sidebar-item>
 </ph-sidebar>
 
 <div class="content">
