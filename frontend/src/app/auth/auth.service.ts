@@ -23,19 +23,18 @@ const clientId = 'webapp';
 })
 export class AuthService {
   
-  public isAuthenticated: Signal<boolean> = computed(() => {
-    const accessToken = this.tokenService.accessToken();
-    return accessToken !== null && accessToken !== undefined && accessToken !== '';
+  public isAuthenticated: Signal<Promise<boolean>> = computed(async () => {
+    const accessToken = await this.tokenService.accessToken();
+    return accessToken !== null && accessToken !== undefined;
   });
 
   private autoAuthentication = effect(async () => {
-    if (!this.isAuthenticated()) {
+    if (!(await this.isAuthenticated())) {
       await this.authenticate();
     }
   })
 
   constructor(
-    private readonly http: HttpClient,
     private readonly pkce: PkceService,
     private readonly tokenService: TokenService,
     private readonly route: ActivatedRoute,
@@ -46,7 +45,7 @@ export class AuthService {
    * Authenticates the user.
    */
   public async authenticate(): Promise<void> {
-    if (this.isAuthenticated()) {
+    if (await this.isAuthenticated()) {
       return;
     } else if (this.isOAuthRedirect()) {
       await this.handleOAuthRedirect();
