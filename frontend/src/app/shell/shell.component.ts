@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, signal, WritableSignal } from '@angular/core';
 import { PhElementsModule } from '../../../lib/ph-elements/ph-elements.module';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-shell',
@@ -13,4 +15,14 @@ import { PhElementsModule } from '../../../lib/ph-elements/ph-elements.module';
 export class ShellComponent {
   public view: string = 'home';
   public tab: string = 'home';
+
+  private currentUrl: WritableSignal<string> = signal('');
+
+  constructor(private readonly router: Router) {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(event => {
+      const url = (event as NavigationEnd).urlAfterRedirects;
+    });
+  }
 }
