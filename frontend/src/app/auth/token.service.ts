@@ -11,6 +11,7 @@
  */
 import { HttpClient } from '@angular/common/http';
 import { computed, effect, Injectable, signal, WritableSignal } from '@angular/core';
+import { ITokenService } from '@phobos/core';
 import { firstValueFrom } from 'rxjs';
 
 import * as jose from 'jose'
@@ -20,7 +21,7 @@ const PHOBOS_AUTH_URL = window.__env.phobosAuthUrl ? window.__env.phobosAuthUrl 
 @Injectable({
   providedIn: 'root'
 })
-export class TokenService {
+export class TokenService implements ITokenService {
   public accessToken = computed(async () => (await this.isTokenValid(this.accessTokenSource()) ? this.accessTokenSource() : null));
   public refreshToken: WritableSignal<string | null> = signal(localStorage.getItem('refresh.token'));
 

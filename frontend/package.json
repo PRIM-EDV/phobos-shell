@@ -17,6 +17,7 @@
     "@angular/platform-browser": "^19.2.8",
     "@angular/platform-browser-dynamic": "^19.2.8",
     "@angular/router": "^19.2.8",
+    "@phobos/core": "file:../libs/core",
     "@softarc/native-federation-node": "^2.0.10",
     "es-module-shims": "^1.5.12",
     "eventemitter2": "^6.4.9",
