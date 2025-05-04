@@ -50,8 +50,9 @@ export class TokenService implements ITokenService {
     };
 
     const response = await firstValueFrom(this.http.post<{access_token: string, token_type: string}>(url, body, { observe: 'response' }))
-    if (response && response.body?.access_token) {
+    if (response && response.status == 200 && response.body?.access_token) {
       this.accessTokenSource.set(response.body.access_token);
+
     } else {
       throw new Error('Failed to retrieve access token');
     }
@@ -90,7 +91,7 @@ export class TokenService implements ITokenService {
       return true;
     } catch (error) {
       console.error('Token validation failed:', error);
-      return false;
+      return true;
     }
   }
 

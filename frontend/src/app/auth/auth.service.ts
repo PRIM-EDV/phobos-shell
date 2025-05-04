@@ -9,7 +9,6 @@
  * It works with an external authorization server defined by PHOBOS_AUTH_URL
  * environment variable.
  */
-import { HttpClient } from '@angular/common/http';
 import { computed, effect, Injectable, Signal } from '@angular/core';
 import { TokenService } from './token.service';
 import { ActivatedRoute, Router } from '@angular/router';
