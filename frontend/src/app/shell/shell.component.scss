@@ -18,13 +18,13 @@ div.content {
     grid-row: 2;
     grid-column: 2;
     display: flex;
-    margin: 24px;
+    margin: 4px;
     align-items: stretch;
     overflow: hidden;
 
     div.workspace {
         display: flex;
-    flex-grow: 1;
+        flex-grow: 1;
         //grid-auto-rows: 24px;
         //grid-auto-columns: 24px;
     }
