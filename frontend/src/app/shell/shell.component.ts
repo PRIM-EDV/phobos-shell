@@ -1,4 +1,4 @@
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, computed, effect, Signal, signal, WritableSignal } from '@angular/core';
 import { PhElementsModule } from '../../../lib/ph-elements/ph-elements.module';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
@@ -13,16 +13,44 @@ import { filter } from 'rxjs';
   styleUrl: './shell.component.scss'
 })
 export class ShellComponent {
-  public view: string = 'home';
-  public tab: string = 'home';
+
+  public view: Signal<string> = computed(() => {
+    const url = this.currentUrl();
+    const parts = url.split('/').filter(Boolean);
+   switch(parts[0]) {
+      case 'maptool':
+        return 'TACOP';
+      default:
+        return '';
+   }
+  });
+
+  public tab: Signal<string> = computed(() => {
+    const url = this.currentUrl();
+    const parts = url.split('/').filter(Boolean);
+    switch(parts[1]) {
+        case 'map':
+          return 'MAP';
+        case 'squad':
+          return 'SQUAD';
+        default:
+          return '';
+    }
+  })
 
   private currentUrl: WritableSignal<string> = signal('');
+
+
 
   constructor(private readonly router: Router) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(event => {
-      const url = (event as NavigationEnd).urlAfterRedirects;
+      this.currentUrl.set((event as NavigationEnd).urlAfterRedirects);
     });
+  }
+
+  public navigate(view: string): void {
+    this.router.navigate([view]);
   }
 }

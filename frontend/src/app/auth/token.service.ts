@@ -91,7 +91,7 @@ export class TokenService implements ITokenService {
       return true;
     } catch (error) {
       console.error('Token validation failed:', error);
-      return true;
+      return false;
     }
   }
 
