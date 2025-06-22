@@ -1,0 +1,85 @@
+/* width */
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    // box-shadow: inset 0 0 5px grey; 
+    // border-radius: 10px;
+    display: none;
+
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    display: none;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    display: none;
+}
+
+:host {
+    display: flex;
+    flex-direction: column;
+    margin: 4px;
+    overflow: hidden;
+}
+
+:host ::ng-deep {
+    table {
+        th {
+            color: #fff;
+            text-align: left;
+            padding-left: 4px;
+            font-family: 'Fira Code';
+            font-size: 11px;
+            font-weight: 400;
+            border-bottom: solid #28343e 2px;
+        }
+
+        td {
+            color: #a9aaac;
+            text-align: left;
+            font-family: 'Fira Code';
+            font-size: 11px;
+            font-weight: 400;
+        }
+
+        tr td {
+            padding: 2px;
+        }
+
+        tr td:not(:last-child) {
+            border-right: solid #28343e 2px;
+        }
+
+        tr:last-child td{
+            border-bottom: solid #28343e 2px;
+        }
+    }
+}
+
+div.table {
+    display: flex;
+    overflow-y: auto;
+
+    table {
+        flex-grow: 1;
+    }
+}
+
+div.label {
+    background-color: #28343e;
+    color: #fff;
+    font-family: 'Fira Code';
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    padding-left: 4px;
+    padding-top: 1px;
+
+    user-select: none;
+}

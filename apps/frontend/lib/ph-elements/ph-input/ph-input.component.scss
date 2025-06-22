@@ -1,0 +1,47 @@
+:host {
+
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 1fr;
+
+    height: 18px;
+    background-color: #23282b;
+
+
+    div.label {
+        background-color: #3ea2dd;
+        font-family: 'Fira Code';
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 17px;
+        padding-left: 4px;
+        padding-top: 1px;
+
+        user-select: none;
+    }
+
+    div.input {
+        display: flex;
+        column-gap: 2px;
+        flex-direction: row-reverse;
+        overflow: hidden;
+
+        input {
+            background-color: #1e1e1e;
+            border-radius: 0;
+            border: 0px solid;
+            border-bottom: 1px solid #1e1e1e;
+            color: #a9aaac;
+            font-family: 'Fira Code';
+            text-align: right;
+            font-size: 12px;
+            padding-left: 4px;
+            padding-top: 3px;
+            height: 13px;
+        }
+
+        input:focus {
+            outline: none;
+        }
+    }
+}

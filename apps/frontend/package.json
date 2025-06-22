@@ -1,5 +1,5 @@
 {
-  "name": "phobos-shell",
+  "name": "@phobos-shell/frontend",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -17,8 +17,8 @@
     "@angular/platform-browser": "^19.2.8",
     "@angular/platform-browser-dynamic": "^19.2.8",
     "@angular/router": "^19.2.8",
-    "@phobos/core": "file:../libs/core",
-    "@phobos/elements": "file:../libs/phobos-elements",
+    "@phobos/core": "^0.1.0",
+    "@phobos/elements": "^0.2.0",
     "@softarc/native-federation-node": "^2.0.10",
     "es-module-shims": "^1.5.12",
     "eventemitter2": "^6.4.9",

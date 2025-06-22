@@ -11,6 +11,8 @@ RUN npm install
 # Build webapp
 COPY ./frontend/lib ./lib
 COPY ./frontend/src ./src
+COPY ./frontend/public ./public
+COPY ./frontend/*.js ./
 # COPY ./protocol ../protocol
 
 # RUN npm run proto:generate

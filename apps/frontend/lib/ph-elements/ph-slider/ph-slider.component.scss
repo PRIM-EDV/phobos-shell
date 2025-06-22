@@ -1,0 +1,118 @@
+:host {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 1fr;
+
+    background-color: #23282b;
+
+
+    div.label {
+        background-color: #f8a403;
+        font-family: 'Fira Code';
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 17px;
+        padding-left: 4px;
+        padding-top: 1px;
+
+        user-select: none;
+    }
+
+    div.input {
+        div.slider {
+            position: relative;
+            height: 48px;
+            display: flex;
+            justify-content: space-between;
+            // flex-grow: 1;
+            // float: left;
+            // position: relative;
+            // // height: 20px;
+            // padding-bottom: 6px;
+            // margin-left: 12px;
+            // margin-right: 11px;
+            // margin-top: 4px;
+
+            div.tick {
+                display: grid;
+                grid-template-columns: 42px;
+                grid-template-rows: 26px 24px;
+                padding: 6px 12px 0 12px;
+                cursor: pointer;
+            
+                div.circle {
+                    margin: auto;
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 8px;
+                    border: 2px solid #ffd27e;
+                    user-select: none;
+
+                }
+
+                div.circle.over {
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 12px;
+                }
+
+                div.value {
+                    color: #a9aaac;
+                    font-family: 'Fira Code';
+                    font-size: 12px;;
+                    text-align: center;
+                    user-select: none;
+                }
+
+                div.value.active {
+                    color: #f8a403;
+                }
+            }
+        
+            div.track {
+                position: absolute;
+                border-radius: 3px;
+                left: 34px;
+                right: 34px;
+                top: 17.25px;
+                height: 3px;
+                pointer-events: none;
+            }
+
+            div.handle {
+                position: absolute;
+                background-color: #f8a403;
+                border: 2px solid #f8a403;
+                width: 14px;
+                height: 14px;
+                border-radius: 14px;
+                top: -7px;
+                left: -10px;
+            }
+        }
+    }
+    
+}
+
+
+
+// div.value {
+//     color: #a0a0a0;
+//     font-size: 14px;
+//     height: 24px;
+//     width: 32px;
+
+
+//     text-align: center;
+// }
+
+// div.handle {
+//     position: absolute;
+//     background: #007acc;
+//     width: 12px;
+//     height: 12px;
+//     border-radius: 50%;
+
+//     top: 0px;
+//     left: -6px;
+// }

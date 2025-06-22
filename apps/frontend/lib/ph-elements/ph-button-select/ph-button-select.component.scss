@@ -1,0 +1,40 @@
+:host {
+
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 1fr;
+
+    height: 18px;
+    background-color: #23282b;
+
+
+    div.label {
+        background-color: #3ea2dd;
+        font-family: 'Fira Code';
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 18px;
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-top: 1px;
+
+        user-select: none;
+    }
+
+    div.list {
+        display: flex;
+        column-gap: 2px;
+        flex-direction: row-reverse;
+        overflow: hidden;
+    }
+}
+
+ph-group :host {
+    background-color: transparent !important;
+
+    div.label {
+        background-color: transparent !important;
+        color: #a9aaac !important;
+        font-weight: unset !important;
+    }
+}

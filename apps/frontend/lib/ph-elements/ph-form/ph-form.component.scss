@@ -1,0 +1,11 @@
+:host {
+    outline: none
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 4px;
+
+    padding: 4px;
+}

@@ -1,0 +1,15 @@
+<!-- <div #ddbox class="dd-box" (click)="toggle($event)"> -->
+
+<div class="label">
+    {{label}}
+</div>
+<div class="input">
+    <div  #dropdown class="dropdown">
+        <div class="value">{{valueLabel}}</div>
+        <div class="arrow" (click)="toggle()">3</div>
+        <div class="list">
+            <ng-content></ng-content>
+        </div>
+    </div>
+</div>
+

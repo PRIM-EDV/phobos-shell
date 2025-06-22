@@ -1,0 +1,31 @@
+:host {
+    margin: 4px;
+
+    display: flex;
+    position: relative;
+}
+
+div.content {
+    padding: 0 0 6px 0;
+    background-color: #252526;
+    display: flex;
+    flex-grow: 1;
+
+    transition: margin 100ms;
+}
+
+div.drop {
+    display: flex;
+    position: absolute;
+    top: -32px;
+    height: 64px;
+    width: 100%;
+}
+
+.click-through {
+    pointer-events: none;
+}
+
+.spacer {
+    margin-top: 64px;
+}

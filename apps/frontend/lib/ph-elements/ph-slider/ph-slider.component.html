@@ -1,0 +1,16 @@
+
+<div class="label">
+    {{label}}
+</div>
+<div class="input" (mousemove)="onDrag($event)">
+    <div class="slider">
+        <div *ngFor="let tick of ticks; index as i" class="tick" (mousedown)="onDragStart(i)">
+            <div class="circle" [ngClass]="{'over': this.active > i}"></div>
+            <div class="value" [ngClass]="{'active': this.active >= i }">{{tick}}</div>
+        </div>
+        <div #track class="track">
+            <div #handle class="handle"></div>
+        </div>
+    </div>
+</div>
+

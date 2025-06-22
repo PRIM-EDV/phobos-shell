@@ -1,0 +1,18 @@
+:host {
+    cursor: pointer;
+    display: flex;
+    box-sizing: border-box;
+
+    min-width: 96px;
+    // height: 18px;
+    padding: 4px 4px 4px 8px;
+
+    color: white;
+    font-family: 'Fira Code';
+    font-size: 12px;
+
+}
+
+:host:hover {
+    background-color: #27343e;
+}

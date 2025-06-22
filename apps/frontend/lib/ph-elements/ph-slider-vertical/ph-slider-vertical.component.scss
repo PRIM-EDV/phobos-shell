@@ -1,0 +1,40 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+div.label {
+
+}
+
+div.input {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    padding: 6px;
+
+    div.slider {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+
+        div.track {
+            position: relative;
+            flex-grow: 1;
+    
+            width: 24px;
+            border: 1px solid #ccc; 
+
+            div.handle {
+                position: absolute;
+                background-color: #f8a403;
+                width: 42px;
+                height: 12px;
+                // top: -7px;
+                // left: -10px;
+            }
+        }
+    }
+}

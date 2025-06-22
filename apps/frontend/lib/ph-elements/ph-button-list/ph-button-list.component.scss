@@ -1,0 +1,17 @@
+:host {
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+
+    height: 18px;
+    padding: 4px;
+
+
+    div.list {
+        display: flex;
+        column-gap: 2px;
+        flex-direction: row-reverse;
+        overflow: hidden;
+    }
+}

@@ -1,0 +1,11 @@
+<div class="title-bar" (mousedown)="handleDragStart($event)" (mousemove)="handleDrag($event)">
+    <div class="title">
+        {{title}}
+    </div>
+    <div class="subtitle">
+        {{subtitle}}
+    </div>
+</div>
+<div class="workspace">
+    <ng-content></ng-content>
+</div>

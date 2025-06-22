@@ -1,0 +1,23 @@
+:host {
+    display: flex;
+    align-items: center;
+    height: 27px;
+    background-color: #252526;
+
+    padding: 2px 24px 0px 12px;
+
+    min-width: 192px;
+
+    font-family: 'Fira Code';
+    border-bottom: 3px solid #28343e;
+}
+
+span.title {
+    font-size: 12px;
+    color: #a9aaac;
+}
+
+span.subtitle {
+    font-size: 12px;
+    color: #fff;
+}

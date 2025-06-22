@@ -1,0 +1,6 @@
+<div class="drop" [class.click-through]="draggedItem == undefined" (mouseover)="handleDropOver($event)" (mouseout)="handleDropLeave($event)">
+
+</div>
+<div class="content" (mousedown)="handleDragStart($event)" [class.spacer]="this.dropOver && this.draggedItem">
+    <ng-content ></ng-content>
+</div>
