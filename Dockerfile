@@ -1,44 +1,64 @@
-FROM node:22.14.0 AS frontend
+FROM node:24.1.0-slim AS deps
+RUN apt update && apt install python3 build-essential -y
 
-# RUN apt update && apt install protobuf-compiler -y 
+WORKDIR /opt/phobos-shell
 
-WORKDIR /opt/auth/frontend
+COPY package*.json ./
+COPY lerna*.json ./
+COPY apps/backend/package.json ./apps/backend/
+COPY apps/frontend/package.json ./apps/frontend/
+COPY libs ./libs
 
-# Install webapp source dependancies
-COPY ./frontend/*.json ./
 RUN npm install
 
-# Build webapp
-COPY ./frontend/lib ./lib
-COPY ./frontend/src ./src
-COPY ./frontend/public ./public
-COPY ./frontend/*.js ./
-# COPY ./protocol ../protocol
+# Build frontend
+FROM deps AS frontend
 
-# RUN npm run proto:generate
-RUN npm run build
+COPY apps/frontend ./apps/frontend
+RUN npx lerna run build --scope @phobos-shell/frontend --include-dependencies
 
-FROM node:22.14.0 AS server
-ENV TZ="Europe/Berlin"
+# Build backend
+FROM deps AS backend
 
-# RUN apt update && apt install protobuf-compiler -y
+COPY apps/backend ./apps/backend
+RUN npx lerna run build --scope @phobos-shell/backend --include-dependencies
 
-EXPOSE 3100
-WORKDIR /opt/auth/backend
+# Final image
+FROM backend
 
-# Install server source dependancies
-COPY ./backend/*.json ./
-RUN npm install
-
-# Build server
-COPY ./backend/src ./src
-# COPY ./backend/lib ./lib
-# COPY ./protocol ../protocol
-
-# RUN npm run proto:generate
-
-# Get webapp artifact
-COPY --from=frontend /opt/auth/frontend/dist/phobos-auth/browser ./dist/public
+WORKDIR /opt/phobos-shell
+COPY --from=frontend /opt/phobos-shell/apps/frontend/dist/phobos-shell/browser ./apps/backend/public
 
 # Run startscript
-CMD npm run start
+COPY ./docker-entrypoint.sh ./
+RUN chmod +x docker-entrypoint.sh
+
+CMD ["./docker-entrypoint.sh"]
+
+# # RUN npm run proto:generate
+# RUN npm run build
+
+# FROM node:22.14.0 AS server
+# ENV TZ="Europe/Berlin"
+
+# # RUN apt update && apt install protobuf-compiler -y
+
+# EXPOSE 3100
+# WORKDIR /opt/auth/backend
+
+# # Install server source dependancies
+# COPY ./backend/*.json ./
+# RUN npm install
+
+# # Build server
+# COPY ./backend/src ./src
+# # COPY ./backend/lib ./lib
+# # COPY ./protocol ../protocol
+
+# # RUN npm run proto:generate
+
+# # Get webapp artifact
+# COPY --from=frontend /opt/auth/frontend/dist/phobos-auth/browser ./dist/public
+
+# # Run startscript
+# CMD npm run start
