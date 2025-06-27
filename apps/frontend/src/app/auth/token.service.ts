@@ -16,7 +16,7 @@ import { firstValueFrom } from 'rxjs';
 
 import * as jose from 'jose'
 
-const PHOBOS_AUTH_URL = window.__env.phobosAuthUrl ? window.__env.phobosAuthUrl : 'http://localhost:3100';
+const PHOBOS_AUTH_URL = window.__env?.phobosAuthUrl ? window.__env.phobosAuthUrl : 'http://localhost:3000';
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +51,7 @@ export class TokenService implements ITokenService {
 
     const response = await firstValueFrom(this.http.post<{access_token: string, token_type: string}>(url, body, { observe: 'response' }))
     if (response && response.status == 200 && response.body?.access_token) {
+      console.log('Access token received:', response.body.access_token);
       this.accessTokenSource.set(response.body.access_token);
 
     } else {
@@ -80,6 +81,7 @@ export class TokenService implements ITokenService {
       const jwks = await this.fetchCerts();
 
       const publicKey = await jose.importJWK(jwks[0], "RS256");
+      console.log('Public key imported:', publicKey);
       const { payload } = await jose.jwtVerify(token, publicKey);
 
       // Check if token has expired

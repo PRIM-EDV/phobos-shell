@@ -1,0 +1,14 @@
+# Compiled output
+dist
+tmp
+/out-tsc
+/bazel-out
+/data
+package-lock.json
+
+# Node
+node_modules
+
+# Miscellaneous
+/.angular/cache
+.nx

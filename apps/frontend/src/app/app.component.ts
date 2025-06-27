@@ -6,8 +6,8 @@ import { ShellComponent } from "./shell/shell.component";
 
 declare global {
   interface Window {
-    __env: {
-      phobosAuthUrl: string,
+    __env?: {
+      phobosAuthUrl?: string,
     }
   }
 }
