@@ -15,6 +15,12 @@
     font-weight: 300;
 }
 
+@font-face {
+    font-family: 'Elegant Icons';
+    src: url('/fonts/ElegantIcons/ElegantIcons.ttf');
+    font-weight: normal;
+}
+
 html {
     background-image: url( '/images/endless-constellation.svg' );
 }
