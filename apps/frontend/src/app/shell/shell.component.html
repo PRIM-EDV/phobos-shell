@@ -2,12 +2,12 @@
 <ph-topbar style="grid-row: 1; grid-column: 2;">
     <ph-topbar-header [title]="view()" [subtitle]="tab()"></ph-topbar-header>
     @if (this.view() == 'TACOP') {
-        <ph-topbar-item [label]="'MAP'" (click)="this.navigate('maptool/map')"></ph-topbar-item>
-        <ph-topbar-item [label]="'SQUAD'" (click)="this.navigate('maptool/squad')"></ph-topbar-item>
+        <ph-topbar-item [label]="'MAP'" [class.active]="tab() === 'MAP'" (click)="this.navigate('maptool/map')"></ph-topbar-item>
+        <ph-topbar-item [label]="'SQUAD'" [class.active]="tab() === 'SQUAD'" (click)="this.navigate('maptool/squad')"></ph-topbar-item>
     }
 </ph-topbar>
 <ph-sidebar [icon]="'/images/phoenix.svg'" style="grid-row: 1 / 3; grid-column: 1;">
-    <ph-sidebar-item (click)="this.navigate('maptool/map')"> TACOP </ph-sidebar-item>
+    <ph-sidebar-item [class.active]="view() === 'TACOP'" (click)="this.navigate('maptool/map')"> TACOP </ph-sidebar-item>
     <ph-sidebar-item (click)="this.navigate('lsx')"> SL </ph-sidebar-item>
 </ph-sidebar>
 
