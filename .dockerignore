@@ -1,14 +1,25 @@
 # Compiled output
+build
+**/build
 dist
+**/dist
+
 tmp
 /out-tsc
 /bazel-out
 /data
 package-lock.json
 
+# Git & system files
+.git
+.gitignore
+.DS_Store
+
 # Node
 node_modules
+**/node_modules
 
 # Miscellaneous
 /.angular/cache
 .nx
+.cache
