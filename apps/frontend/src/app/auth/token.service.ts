@@ -38,7 +38,7 @@ export class TokenService implements ITokenService {
    * Retrieves the access token from the URL and stores it in the local storage.
    * 
    * @param {string} code - The authorization code received from the OAuth2 server. 
-   * @param {string} codeVerifier - The code verifier used to generate the authorization code. 
+   * @param {string} verifier - The code verifier used to generate the authorization code. 
    */
   public async requestAccessToken(code: string, verifier: string): Promise<void> {
     const clientId = 'webapp';
@@ -51,7 +51,6 @@ export class TokenService implements ITokenService {
 
     const response = await firstValueFrom(this.http.post<{access_token: string, token_type: string}>(url, body, { observe: 'response' }))
     if (response && response.status == 200 && response.body?.access_token) {
-      console.log('Access token received:', response.body.access_token);
       this.accessTokenSource.set(response.body.access_token);
 
     } else {
@@ -81,7 +80,6 @@ export class TokenService implements ITokenService {
       const jwks = await this.fetchCerts();
 
       const publicKey = await jose.importJWK(jwks[0], "RS256");
-      console.log('Public key imported:', publicKey);
       const { payload } = await jose.jwtVerify(token, publicKey);
 
       // Check if token has expired
