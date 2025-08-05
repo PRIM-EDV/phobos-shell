@@ -1,3 +1,4 @@
 {
+	"phobos-auth": "http://localhost:3000/remoteEntry.json",
 	"phobos-maptool": "http://localhost:3002/remoteEntry.json"
 }
