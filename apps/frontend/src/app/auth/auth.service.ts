@@ -22,14 +22,14 @@ const clientId = 'webapp';
 })
 export class AuthService {
   
-  public isAuthenticated: Signal<Promise<boolean>> = computed(async () => {
-    const accessToken = await this.tokenService.accessToken();
+  public isAuthenticated: Signal<boolean> = computed(() => {
+    const accessToken = this.tokenService.accessToken();
     return accessToken !== null && accessToken !== undefined;
   });
 
-  private autoAuthentication = effect(async () => {
-    if (!(await this.isAuthenticated())) {
-      await this.authenticate();
+  private autoAuthentication = effect(() => {
+    if (!(this.isAuthenticated())) {
+      this.authenticate();
     }
   })
 
@@ -44,7 +44,7 @@ export class AuthService {
    * Authenticates the user.
    */
   public async authenticate(): Promise<void> {
-    if (await this.isAuthenticated()) {
+    if (this.isAuthenticated()) {
       return;
     } else if (this.isOAuthRedirect()) {
       await this.handleOAuthRedirect();
