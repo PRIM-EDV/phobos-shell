@@ -1,12 +1,20 @@
+import { CommonModule } from '@angular/common';
 import { Component, computed, Signal, signal, WritableSignal } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 import { PhSidebar, PhSidebarItem, PhTopbar, PhTopbarHeader, PhTopbarItem } from "@phobos/elements";
 
 import { filter } from "rxjs";
+import { AuthzService } from "../auth/authz.service";
 
 @Component({
   selector: "app-shell",
-  imports: [PhTopbar, PhTopbarHeader, PhTopbarItem, PhSidebar, PhSidebarItem],
+  imports: [
+    CommonModule,
+    PhTopbar, 
+    PhTopbarHeader, 
+    PhTopbarItem, 
+    PhSidebar, 
+    PhSidebarItem],
   standalone: true,
   templateUrl: "./shell.component.html",
   styleUrl: "./shell.component.scss",
@@ -18,6 +26,8 @@ export class ShellComponent {
     switch (parts[0]) {
       case "maptool":
         return "TACOP";
+      case "user":
+        return "USER";
       default:
         return "";
     }
@@ -38,7 +48,10 @@ export class ShellComponent {
 
   private currentUrl: WritableSignal<string> = signal("");
 
-  constructor(private readonly router: Router) {
+  constructor(
+    public readonly authz: AuthzService,
+    private readonly router: Router)
+    {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
       this.currentUrl.set((event as NavigationEnd).urlAfterRedirects);
     });
