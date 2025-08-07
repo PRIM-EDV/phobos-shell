@@ -3,7 +3,8 @@ import { NavigationEnd, Router, RouterOutlet } from "@angular/router";
 import { ShellComponent } from "./shell/shell.component";
 import { filter } from "rxjs";
 import { AuthzService } from "./auth/authz.service";
-// import { EventEmitter2 } from 'eventemitter2';
+import { AuthService } from "./auth/auth.service";
+
 
 declare global {
   interface Window {
@@ -24,6 +25,7 @@ export class AppComponent {
   title = "phobos-shell";
 
   constructor(
+    private readonly auth: AuthService,
     private readonly authz: AuthzService,
     private readonly router: Router
   ) {}
