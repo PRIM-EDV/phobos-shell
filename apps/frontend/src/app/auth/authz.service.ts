@@ -17,8 +17,8 @@ export class AuthzService {
    * @param role The role to check against the user's token.
    * @returns Promise resolving to true if the user has the role, false otherwise.
    */
-  public async hasRole(role: string): Promise<boolean> {
-    const token = await this.tokenService.accessToken();
+  public hasRole(role: string): boolean {
+    const token = this.tokenService.accessToken();
     if (!token) return false;
 
     try {

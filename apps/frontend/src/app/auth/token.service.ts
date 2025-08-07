@@ -10,7 +10,7 @@
  * This service assumes a PKCE-compliant OAuth2 authorization server.
  */
 import { HttpClient } from '@angular/common/http';
-import { computed, effect, Injectable, signal, WritableSignal } from '@angular/core';
+import { effect, Injectable, signal, WritableSignal } from '@angular/core';
 import { ITokenService } from '@phobos/core';
 import { firstValueFrom } from 'rxjs';
 
@@ -22,13 +22,12 @@ const PHOBOS_AUTH_URL = window.__env?.phobosAuthUrl ? window.__env.phobosAuthUrl
   providedIn: 'root'
 })
 export class TokenService implements ITokenService {
-  public accessToken = computed(async () => (await this.isTokenValid(this.accessTokenSource()) ? this.accessTokenSource() : null));
+  public accessToken: WritableSignal<string | null> = signal(localStorage.getItem('access.token'));
   public refreshToken: WritableSignal<string | null> = signal(localStorage.getItem('refresh.token'));
 
-  private accessTokenSource: WritableSignal<string | null> = signal(localStorage.getItem('access.token'));
-
-  syncAccessToken = this.localStorageSyncEffect(this.accessTokenSource, 'access.token');
+  syncAccessToken = this.localStorageSyncEffect(this.accessToken, 'access.token');
   syncRefreshToken = this.localStorageSyncEffect(this.refreshToken, 'refresh.token');
+  validateAccessToken = this.validateAccessTokenEffect(this.accessToken);
 
   constructor(
     private http: HttpClient
@@ -51,7 +50,7 @@ export class TokenService implements ITokenService {
 
     const response = await firstValueFrom(this.http.post<{access_token: string, token_type: string}>(url, body, { observe: 'response' }))
     if (response && response.status == 200 && response.body?.access_token) {
-      this.accessTokenSource.set(response.body.access_token);
+      this.accessToken.set(response.body.access_token);
 
     } else {
       throw new Error('Failed to retrieve access token');
@@ -63,38 +62,7 @@ export class TokenService implements ITokenService {
     const response = await firstValueFrom(this.http.get<{ keys: any[] }>(url));
     return response.keys;
   }
-
-  /**
-   * Validates if the given token is valid by verifying its signature and expiration.
-   * 
-   * @param {string | null} token - The JWT token to validate
-   * @returns {Promise<boolean>} True if the token is valid and not expired
-   */
-  private async isTokenValid(token: string | null): Promise<boolean> {
-    if (!token) {
-      console.error('Token is null or undefined');
-      return false; 
-    }
-
-    try {
-      const jwks = await this.fetchCerts();
-
-      const publicKey = await jose.importJWK(jwks[0], "RS256");
-      const { payload } = await jose.jwtVerify(token, publicKey);
-
-      // Check if token has expired
-      const now = Math.floor(Date.now() / 1000);
-      if (!payload.exp || now >= payload.exp) {
-        return false
-      }
-
-      return true;
-    } catch (error) {
-      console.error('Token validation failed:', error);
-      return false;
-    }
-  }
-
+  
   /**
    * Synchronizes the access and refresh tokens with local storage.
    * 
@@ -111,5 +79,42 @@ export class TokenService implements ITokenService {
       }
     });
   }
-  
+
+  /**
+   * Validates if the given token is valid by verifying its signature and expiration.
+   * 
+   * @param {WritableSignal<string | null>} token - The JWT token signal to validate
+   */
+  private validateAccessTokenEffect(token: WritableSignal<string | null>) {
+    return effect(async () => {
+     if (!token()) {
+        console.error('Token is null or undefined');
+        token.set(null);
+        return;
+      }
+
+      try {
+        const jwks = await this.fetchCerts();
+
+        if (jwks.length === 0) {
+          console.error('No JWKS found');
+          token.set(null);
+          return;
+        }
+
+        const publicKey = await jose.importJWK(jwks[0], "RS256");
+        const { payload } = await jose.jwtVerify(token() as string, publicKey);
+
+        // Check if token has expired
+        const now = Math.floor(Date.now() / 1000);
+        if (!payload.exp || now >= payload.exp) {
+          token.set(null);
+          return;
+        }
+      } catch (error) {
+        console.error('Token validation failed:', error);
+        token.set(null);
+      }
+    });
+  }
 }
