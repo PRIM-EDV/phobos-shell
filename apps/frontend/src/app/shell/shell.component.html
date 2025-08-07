@@ -5,12 +5,15 @@
         <ph-topbar-item [label]="'MAP'" [class.active]="tab() === 'MAP'" (click)="this.navigate('maptool/map')"></ph-topbar-item>
         <ph-topbar-item [label]="'SQUAD'" [class.active]="tab() === 'SQUAD'" (click)="this.navigate('maptool/squad')"></ph-topbar-item>
     }
+    @if (this.view() == 'ADMIN') {
+        <ph-topbar-item [label]="'USER'" [class.active]="tab() === 'USER'" (click)="this.navigate('admin/user')"></ph-topbar-item>
+    }
 </ph-topbar>
 <ph-sidebar [icon]="'/images/phoenix.svg'" style="grid-row: 1 / 3; grid-column: 1;">
     <ph-sidebar-item [class.active]="view() === 'TACOP'" (click)="this.navigate('maptool/map')"> TACOP </ph-sidebar-item>
     
-    @if (this.authz.hasRole('admin') | async) { 
-        <ph-sidebar-item [class.active]="view() === 'USER'" (click)="this.navigate('user')"> USER </ph-sidebar-item>
+    @if (this.authz.hasRole('admin')) { 
+        <ph-sidebar-item [class.active]="view() === 'ADMIN'" (click)="this.navigate('admin/user')"> ADMIN </ph-sidebar-item>
     }
     <ph-sidebar-item (click)="this.navigate('lsx')"> SL </ph-sidebar-item>
 </ph-sidebar>

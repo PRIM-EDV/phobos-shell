@@ -26,8 +26,8 @@ export class ShellComponent {
     switch (parts[0]) {
       case "maptool":
         return "TACOP";
-      case "user":
-        return "USER";
+      case "admin":
+        return "ADMIN";
       default:
         return "";
     }
@@ -41,6 +41,8 @@ export class ShellComponent {
         return "MAP";
       case "squad":
         return "SQUAD";
+      case "user":
+        return "USER";
       default:
         return "";
     }

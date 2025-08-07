@@ -22,7 +22,7 @@ export class AuthzService {
     if (!token) return false;
 
     try {
-      const { role: userRole } = jose.decodeJwt(token) as { role?: string };
+      const { scope: userRole } = jose.decodeJwt(token) as { scope?: string };
       return userRole === role;
     } catch (error) {
       console.error('Error decoding token:', error);

@@ -8,7 +8,7 @@ export const routes: Routes = [
         loadComponent: () => loadRemoteModule('phobos-maptool', './Component').then((m) => m.AppComponent),
         loadChildren: () => loadRemoteModule('phobos-maptool', './Routes').then((m) => m.routes), 
     },
-    { path: 'user',
+    { path: 'admin/user',
         loadComponent: () => loadRemoteModule('phobos-auth', './Component').then((m) => m.UserComponent)
     }
 ];
