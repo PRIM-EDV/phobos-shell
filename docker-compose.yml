@@ -9,7 +9,5 @@ services:
     ports:
       - "${PHOBOS_SHELL_PORT:-3001}:3001"
     environment:
-      - PHOBOS_AUTH_URL={PHOBOS_AUTH_URL}
-
-
-    
+      - PHOBOS_AUTH_URL=${PHOBOS_AUTH_URL:-http://localhost:3000}
+      - PHOBOS_MAPTOOL_URL=${PHOBOS_MAPTOOL_URL:-http://localhost:3002}

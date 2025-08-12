@@ -40,6 +40,7 @@ export class PkceService {
     return base64url;
   }
 
+  
   private async digest(data: Uint8Array<ArrayBuffer>): Promise<ArrayBuffer> {
     if (crypto.subtle && typeof crypto.subtle.digest === 'function') {
       return crypto.subtle.digest('SHA-256', data);

@@ -16,7 +16,7 @@ import { firstValueFrom } from 'rxjs';
 
 import * as jose from 'jose'
 
-const PHOBOS_AUTH_URL = window.__env?.phobosAuthUrl ? window.__env.phobosAuthUrl : 'http://localhost:3000';
+const PHOBOS_AUTH_URL = window.__env?.PHOBOS_AUTH_URL ? window.__env?.PHOBOS_AUTH_URL : 'http://localhost:3000';
 
 @Injectable({
   providedIn: 'root'

@@ -9,7 +9,7 @@ import { AuthService } from "./auth/auth.service";
 declare global {
   interface Window {
     __env?: {
-      phobosAuthUrl?: string;
+      PHOBOS_AUTH_URL?: string;
     };
   }
 }
