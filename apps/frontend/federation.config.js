@@ -12,6 +12,7 @@ module.exports = withNativeFederation({
     'rxjs/fetch',
     'rxjs/testing',
     'rxjs/webSocket',
+    'jsrsasign'
     // Add further packages you don't need at runtime
   ]
 

@@ -19,10 +19,12 @@
     "@phobos/core": "^0.1.0",
     "@phobos/elements": "^0.2.1",
     "@softarc/native-federation-node": "^2.0.10",
+    "@types/jsrsasign": "^10.5.15",
     "crypto-js": "^4.2.0",
     "es-module-shims": "^1.5.12",
     "eventemitter2": "^6.4.9",
     "jose": "^6.0.10",
+    "jsrsasign": "^11.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

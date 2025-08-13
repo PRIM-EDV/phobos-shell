@@ -14,7 +14,11 @@ import { effect, Injectable, signal, WritableSignal } from '@angular/core';
 import { ITokenService } from '@phobos/core';
 import { firstValueFrom } from 'rxjs';
 
-import * as jose from 'jose'
+import { KEYUTIL, KJUR, RSAKey } from 'jsrsasign';
+
+// import * as jose from 'jose'
+
+import { JWK } from './interfaces/jwk.interface';
 
 const PHOBOS_AUTH_URL = window.__env?.PHOBOS_AUTH_URL ? window.__env?.PHOBOS_AUTH_URL : 'http://localhost:3000';
 
@@ -31,9 +35,7 @@ export class TokenService implements ITokenService {
 
   constructor(
     private http: HttpClient
-  ) { 
-    this.polyfillImportKey();
-  }
+  ) { }
 
   /**
    * Retrieves the access token from the URL and stores it in the local storage.
@@ -91,7 +93,7 @@ export class TokenService implements ITokenService {
     return effect(async () => {
      if (!token()) {
         console.error('Token is null or undefined');
-        //token.set(null);
+        token.set(null);
         return;
       }
 
@@ -100,55 +102,40 @@ export class TokenService implements ITokenService {
 
         if (jwks.length === 0) {
           console.error('No JWKS found');
-          //token.set(null);
+          token.set(null);
           return;
         }
 
-        const publicKey = await jose.importJWK(jwks[0], "RS256");
-        const { payload } = await jose.jwtVerify(token() as string, publicKey);
+        // const publicKey = await jose.importJWK(jwks[0], "RS256");
+        // const { payload } = await jose.jwtVerify(token() as string, publicKey);
+        const payload = this.verifyJWT(token() as string, jwks[0] as JWK);
 
         // Check if token has expired
         const now = Math.floor(Date.now() / 1000);
         if (!payload.exp || now >= payload.exp) {
-          //token.set(null);
+          token.set(null);
           return;
         }
       } catch (error) {
         console.error('Token validation failed:', error);
-        //token.set(null);
+        token.set(null);
       }
     });
   }
 
-  private polyfillImportKey() {
-    if (!crypto.subtle) { (crypto as any)["subtle"] = {};}
+  /**
+   * Verifies the JWT token using the provided JWK.
+   * @param token The JWT token to verify.
+   * @param jwk The JSON Web Key used for verification.
+   * @returns The payload of the verified token.
+   */
+  private verifyJWT(token: string, jwk: JWK): any {
+    const pubKey = KEYUTIL.getKey({ kty: jwk.kty, n: jwk.n, e: jwk.e }) as RSAKey;
+    const isValid = KJUR.jws.JWS.verifyJWT(token, pubKey, { alg: ['RS256'] });
+    
+    if (!isValid) throw new Error('JWT signature validation failed');
 
-    if (typeof crypto.subtle.importKey !== 'function') {
-      (crypto.subtle as any).importKey = (
-        format: string,
-        keyData: ArrayBuffer | Uint8Array,
-        algorithm: string | { name: string; [key: string]: any },
-        extractable: boolean,
-        keyUsages: string[]
-      ): Promise<CryptoKey> => {
-        return new Promise((resolve, reject) => {
-          try {
-            const rawData = keyData instanceof Uint8Array ? keyData : new Uint8Array(keyData);
-
-            const key: CryptoKey = {
-              type: 'secret',
-              extractable: extractable,
-              algorithm: typeof algorithm === 'string' ? { name: algorithm } : algorithm,
-              usages: keyUsages,
-              _raw: rawData
-            } as any;
-
-            resolve(key);
-          } catch (err) {
-            reject(err);
-          }
-        });
-      };
-    }
+    const payload = KJUR.jws.JWS.parse(token).payloadObj;
+    return payload;
   }
 }
