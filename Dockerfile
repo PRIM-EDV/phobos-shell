@@ -1,5 +1,5 @@
 FROM node:24.1.0-slim AS deps
-RUN apt update && apt install python3 build-essential -y
+RUN apt update && apt install python3 build-essential gettext -y
 
 WORKDIR /opt/phobos-shell
 
