@@ -31,7 +31,9 @@ export class TokenService implements ITokenService {
 
   constructor(
     private http: HttpClient
-  ) { }
+  ) { 
+    this.polyfillImportKey();
+  }
 
   /**
    * Retrieves the access token from the URL and stores it in the local storage.
@@ -89,7 +91,7 @@ export class TokenService implements ITokenService {
     return effect(async () => {
      if (!token()) {
         console.error('Token is null or undefined');
-        token.set(null);
+        //token.set(null);
         return;
       }
 
@@ -98,7 +100,7 @@ export class TokenService implements ITokenService {
 
         if (jwks.length === 0) {
           console.error('No JWKS found');
-          token.set(null);
+          //token.set(null);
           return;
         }
 
@@ -108,13 +110,45 @@ export class TokenService implements ITokenService {
         // Check if token has expired
         const now = Math.floor(Date.now() / 1000);
         if (!payload.exp || now >= payload.exp) {
-          token.set(null);
+          //token.set(null);
           return;
         }
       } catch (error) {
         console.error('Token validation failed:', error);
-        token.set(null);
+        //token.set(null);
       }
     });
+  }
+
+  private polyfillImportKey() {
+    if (!crypto.subtle) { (crypto as any)["subtle"] = {};}
+
+    if (typeof crypto.subtle.importKey !== 'function') {
+      (crypto.subtle as any).importKey = (
+        format: string,
+        keyData: ArrayBuffer | Uint8Array,
+        algorithm: string | { name: string; [key: string]: any },
+        extractable: boolean,
+        keyUsages: string[]
+      ): Promise<CryptoKey> => {
+        return new Promise((resolve, reject) => {
+          try {
+            const rawData = keyData instanceof Uint8Array ? keyData : new Uint8Array(keyData);
+
+            const key: CryptoKey = {
+              type: 'secret',
+              extractable: extractable,
+              algorithm: typeof algorithm === 'string' ? { name: algorithm } : algorithm,
+              usages: keyUsages,
+              _raw: rawData
+            } as any;
+
+            resolve(key);
+          } catch (err) {
+            reject(err);
+          }
+        });
+      };
+    }
   }
 }

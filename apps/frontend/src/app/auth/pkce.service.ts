@@ -16,7 +16,9 @@ import CryptoJS from "crypto-js";
 })
 export class PkceService {
 
-  constructor() { }
+  constructor() { 
+    this.polyfillDigest();
+  }
 
   public generateCodeVerifier(length: number = 128): string {
     const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
@@ -34,25 +36,26 @@ export class PkceService {
     const encodedVerifier = encoder.encode(codeVerifier);
 
     // SHA-256 Hashing
-    const hashBuffer = await this.digest(encodedVerifier);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', encodedVerifier);
     const base64url = btoa(String.fromCharCode(...new Uint8Array(hashBuffer))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 
     return base64url;
   }
 
-  
-  private async digest(data: Uint8Array<ArrayBuffer>): Promise<ArrayBuffer> {
-    if (crypto.subtle && typeof crypto.subtle.digest === 'function') {
-      return crypto.subtle.digest('SHA-256', data);
-    } else {
-      const wordArray = CryptoJS.lib.WordArray.create(data);
-      const hash = CryptoJS.SHA256(wordArray);
-      const hashArray = new Uint8Array(hash.sigBytes);
+  private polyfillDigest() {
+    if (!crypto.subtle) { (crypto as any)["subtle"] = {};}
 
-      for (let i = 0; i < hash.sigBytes; i++) {
-        hashArray[i] = (hash.words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
-      }
-      return hashArray.buffer;
+    if (typeof crypto.subtle.digest !== 'function') {
+      (crypto.subtle as any).digest = (data: Uint8Array) => {
+        const wordArray = CryptoJS.lib.WordArray.create(data);
+        const hash = CryptoJS.SHA256(wordArray);
+        const hashArray = new Uint8Array(hash.sigBytes);
+
+        for (let i = 0; i < hash.sigBytes; i++) {
+          hashArray[i] = (hash.words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+        }
+        return hashArray.buffer;
+      };
     }
   }
 }
