@@ -1,4 +1,5 @@
 {
 	"phobos-auth": "${PHOBOS_AUTH_URL}/remoteEntry.json",
-	"phobos-maptool": "${PHOBOS_MAPTOOL_URL}/remoteEntry.json"
+	"phobos-maptool": "${PHOBOS_MAPTOOL_URL}/remoteEntry.json",
+	"phobos-lsx": "${PHOBOS_LSX_URL}/remoteEntry.json"
 }

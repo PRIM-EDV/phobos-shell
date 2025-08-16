@@ -1,11 +1,11 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
-
+import { AUTHZ_SERVICE_TOKEN, TOKEN_SERVICE_TOKEN } from '@phobos/core';
 
 import { routes } from './app.routes';
 import { TokenService } from './auth/token.service';
-import { TOKEN_SERVICE_TOKEN } from '@phobos/core';
+import { AuthzService } from './auth/authz.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,8 +13,12 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(),
     {
+      provide: AUTHZ_SERVICE_TOKEN,
+      useExisting: AuthzService
+    },
+    {
       provide: TOKEN_SERVICE_TOKEN,
-      useExisting: TokenService // Replace with your actual API base URL
+      useExisting: TokenService
     }
   ]
 };
