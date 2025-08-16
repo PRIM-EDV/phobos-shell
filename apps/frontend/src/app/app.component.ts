@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, effect, signal, WritableSignal } from "@angular/core";
 import { NavigationEnd, Router, RouterOutlet } from "@angular/router";
 import { ShellComponent } from "./shell/shell.component";
 import { filter } from "rxjs";
@@ -24,17 +24,23 @@ declare global {
 export class AppComponent {
   title = "phobos-shell";
 
+  private currentUrl: WritableSignal<string> = signal("");
+
+  redirect = effect(async () => {
+    if (this.auth.isAuthenticated() && this.currentUrl() === "/") {
+      await this.redirectToUserLanding();
+    }
+  });
+
   constructor(
     private readonly auth: AuthService,
     private readonly authz: AuthzService,
     private readonly router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
-    this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe(async (e: NavigationEnd) => {
-      if (e.urlAfterRedirects === "/") {
-        await this.redirectToUserLanding();
-      }
+    this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe((e: NavigationEnd) => {
+      this.currentUrl.set(e.urlAfterRedirects);
     });
   }
 
