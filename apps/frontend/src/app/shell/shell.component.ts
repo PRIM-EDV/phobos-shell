@@ -28,6 +28,8 @@ export class ShellComponent {
         return "TACOP";
       case "admin":
         return "ADMIN";
+      case "lsx":
+        return "SL";
       default:
         return "";
     }
@@ -43,6 +45,8 @@ export class ShellComponent {
         return "SQUAD";
       case "user":
         return "USER";
+      case "general":
+        return "GENERAL";
       default:
         return "";
     }

@@ -46,8 +46,10 @@ export class AppComponent {
 
   private async redirectToUserLanding(): Promise<void> {
     switch (true) {
-      case await this.authz.hasRole('admin'):
-        await this.router.navigate(['/maptool/map']);
+      case this.authz.hasRole('admin'):
+        await this.router.navigate(['/lsx/general']); break;
+      case this.authz.hasRole('tacop'):
+        await this.router.navigate(['/maptool/map']); break;
     }
   }
 }
