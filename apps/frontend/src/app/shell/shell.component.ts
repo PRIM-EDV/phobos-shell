@@ -5,15 +5,16 @@ import { PhSidebar, PhSidebarItem, PhTopbar, PhTopbarHeader, PhTopbarItem } from
 
 import { filter } from "rxjs";
 import { AuthzService } from "../auth/authz.service";
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: "app-shell",
   imports: [
     CommonModule,
-    PhTopbar, 
-    PhTopbarHeader, 
-    PhTopbarItem, 
-    PhSidebar, 
+    PhTopbar,
+    PhTopbarHeader,
+    PhTopbarItem,
+    PhSidebar,
     PhSidebarItem],
   standalone: true,
   templateUrl: "./shell.component.html",
@@ -47,6 +48,8 @@ export class ShellComponent {
         return "USER";
       case "general":
         return "GENERAL";
+      case "drone":
+        return "DRONE";
       default:
         return "";
     }
@@ -56,11 +59,16 @@ export class ShellComponent {
 
   constructor(
     public readonly authz: AuthzService,
+    private readonly auth: AuthService,
     private readonly router: Router)
-    {
+  {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
       this.currentUrl.set((event as NavigationEnd).urlAfterRedirects);
     });
+  }
+
+  public logout(): void {
+    this.auth.logout();
   }
 
   public navigate(view: string): void {

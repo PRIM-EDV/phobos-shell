@@ -53,6 +53,10 @@ export class AuthService {
     }
   }
 
+  public logout(): void {
+    this.tokenService.accessToken.set(null);
+  }
+
   /**
    * Handles the OAuth2 redirect after the user has authorized the application.
    * 

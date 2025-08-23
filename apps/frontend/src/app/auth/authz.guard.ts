@@ -7,7 +7,7 @@ export const authzGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: 
   const authService = inject(AuthService);
   const authzService = inject(AuthzService);
   const roles = route.data['roles'] as string[];
-
+  
   if (!roles || roles.length === 0) {
     return authService.isAuthenticated();
   } else {

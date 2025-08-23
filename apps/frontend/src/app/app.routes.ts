@@ -15,7 +15,7 @@ export const routes: Routes = [
     data: {
       roles: ['admin']
     },
-    loadComponent: () => loadRemoteModule('phobos-auth', './Component').then((m) => m.UserComponent)
+    loadComponent: () => loadRemoteModule('phobos-auth', './Component').then((m) => m.AdminComponent)
   },
   {
     path: 'lsx',

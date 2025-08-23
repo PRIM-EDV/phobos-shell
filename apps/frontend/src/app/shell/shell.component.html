@@ -10,7 +10,12 @@
     }
     @if (this.view() == 'SL') {
         <ph-topbar-item [label]="'GENERAL'" [class.active]="tab() === 'GENERAL'" (click)="this.navigate('lsx/general')"></ph-topbar-item>
+        <ph-topbar-item [label]="'DRONE'" [class.active]="tab() === 'DRONE'" (click)="this.navigate('lsx/drone')"></ph-topbar-item>
     }
+    <div style="flex-grow: 1;"> </div>
+    <div class="logout" (click)="this.logout()">
+        <img src="/images/logout.svg" alt="Logout">
+    </div>
 </ph-topbar>
 <ph-sidebar [icon]="'/images/phoenix.svg'" style="grid-row: 1 / 3; grid-column: 1;">
     <ph-sidebar-item [class.active]="view() === 'TACOP'" (click)="this.navigate('maptool/map')"> TACOP </ph-sidebar-item>
