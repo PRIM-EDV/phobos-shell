@@ -11,3 +11,4 @@ services:
     environment:
       - PHOBOS_AUTH_URL=${PHOBOS_AUTH_URL:-http://localhost:3000}
       - PHOBOS_MAPTOOL_URL=${PHOBOS_MAPTOOL_URL:-http://localhost:3002}
+      - PHOBOS_LSX_URL=${PHOBOS_LSX_URL:-http://localhost:3005}
