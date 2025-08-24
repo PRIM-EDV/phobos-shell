@@ -11,9 +11,9 @@ export class FederationController {
     getFederationManifest(@Req() req, @Res() res: Response) {
         const protocol = req.protocol;
 
-        const authUrl = PHOBOS_AUTH_URL ? PHOBOS_AUTH_URL : `${protocol}://${req.get('host')}:3000/remoteEntry.json`;
-        const maptoolUrl = PHOBOS_MAPTOOL_URL ? PHOBOS_MAPTOOL_URL : `${protocol}://${req.get('host')}:3002/remoteEntry.json`;
-        const lsxUrl = PHOBOS_LSX_URL ? PHOBOS_LSX_URL : `${protocol}://${req.get('host')}:3005/remoteEntry.json`;
+        const authUrl = PHOBOS_AUTH_URL ? `${PHOBOS_AUTH_URL}/remoteEntry.json` : `${protocol}://${req.get('host')}:3000/remoteEntry.json`;
+        const maptoolUrl = PHOBOS_MAPTOOL_URL ? `${PHOBOS_MAPTOOL_URL}/remoteEntry.json` : `${protocol}://${req.get('host')}:3002/remoteEntry.json`;
+        const lsxUrl = PHOBOS_LSX_URL ? `${PHOBOS_LSX_URL}/remoteEntry.json` : `${protocol}://${req.get('host')}:3005/remoteEntry.json`;
 
         const config = {
             "phobos-auth": authUrl,
