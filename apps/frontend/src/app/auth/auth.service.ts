@@ -14,7 +14,7 @@ import { TokenService } from './token.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PkceService } from './pkce.service';
 
-const PHOBOS_AUTH_URL = window.__env?.PHOBOS_AUTH_URL ? window.__env?.PHOBOS_AUTH_URL : 'http://localhost:3000';
+const PHOBOS_AUTH_URL = window.__env?.PHOBOS_AUTH_URL ? window.__env?.PHOBOS_AUTH_URL : `${window.location.protocol}//${window.location.hostname}:3000`;
 const clientId = 'webapp';
 
 @Injectable({

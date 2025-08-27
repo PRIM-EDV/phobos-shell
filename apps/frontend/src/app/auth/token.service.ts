@@ -20,7 +20,7 @@ import { KEYUTIL, KJUR, RSAKey } from 'jsrsasign';
 
 import { JWK } from './interfaces/jwk.interface';
 
-const PHOBOS_AUTH_URL = window.__env?.PHOBOS_AUTH_URL ? window.__env?.PHOBOS_AUTH_URL : 'http://localhost:3000';
+const PHOBOS_AUTH_URL = window.__env?.PHOBOS_AUTH_URL ? window.__env?.PHOBOS_AUTH_URL : `${window.location.protocol}//${window.location.hostname}:3000`;
 
 @Injectable({
   providedIn: 'root'
