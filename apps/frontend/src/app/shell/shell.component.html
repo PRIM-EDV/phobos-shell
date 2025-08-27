@@ -11,6 +11,10 @@
     @if (this.view() == 'SL') {
         <ph-topbar-item [label]="'GENERAL'" [class.active]="tab() === 'GENERAL'" (click)="this.navigate('lsx/general')"></ph-topbar-item>
         <ph-topbar-item [label]="'DRONE'" [class.active]="tab() === 'DRONE'" (click)="this.navigate('lsx/drone')"></ph-topbar-item>
+        <ph-topbar-item [label]="'EVENT'" [class.active]="tab() === 'EVENT'" (click)="this.navigate('lsx/event')"></ph-topbar-item>
+    }
+    @if (this.view() == 'TEC') {
+        <ph-topbar-item [label]="'TECHNICAL'" [class.active]="tab() === 'TECHNICAL'" (click)="this.navigate('lsx/technical')"></ph-topbar-item>
     }
     <div style="flex-grow: 1;"> </div>
     <div class="logout" (click)="this.logout()">
@@ -24,6 +28,9 @@
     }
     @if (this.authz.hasRole('admin') || this.authz.hasRole('sl')) { 
         <ph-sidebar-item [class.active]="view() === 'SL'" (click)="this.navigate('lsx/general')"> SL </ph-sidebar-item>
+    }
+    @if (this.authz.hasRole('tec')) { 
+        <ph-sidebar-item [class.active]="view() === 'TEC'" (click)="this.navigate('lsx/technical')"> TEC </ph-sidebar-item>
     }
 </ph-sidebar>
 

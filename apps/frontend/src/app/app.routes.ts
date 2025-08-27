@@ -21,7 +21,7 @@ export const routes: Routes = [
     path: 'lsx',
     canActivate: [authzGuard],
     data: {
-      roles: ['sl', 'admin']
+      roles: ['tec', 'sl', 'admin']
     },
     loadComponent: () => loadRemoteModule('phobos-lsx', './Component').then((m) => m.AppComponent),
     loadChildren: () => loadRemoteModule('phobos-lsx', './Routes').then((m) => m.routes)

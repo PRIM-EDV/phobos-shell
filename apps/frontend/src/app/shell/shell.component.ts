@@ -30,7 +30,11 @@ export class ShellComponent {
       case "admin":
         return "ADMIN";
       case "lsx":
-        return "SL";
+        if (this.authz.hasRole('sl') || this.authz.hasRole('admin')) {
+          return "SL";
+        } else {
+          return "TEC";
+        }
       default:
         return "";
     }
@@ -50,6 +54,10 @@ export class ShellComponent {
         return "GENERAL";
       case "drone":
         return "DRONE";
+      case "technical":
+        return "TECHNICAL";
+      case "event":
+        return "EVENT";
       default:
         return "";
     }

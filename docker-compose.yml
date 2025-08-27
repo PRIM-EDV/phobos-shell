@@ -9,6 +9,8 @@ services:
     ports:
       - "${PHOBOS_SHELL_PORT:-3001}:3001"
     environment:
-      - PHOBOS_AUTH_URL=${PHOBOS_AUTH_URL:-http://localhost:3000}
-      - PHOBOS_MAPTOOL_URL=${PHOBOS_MAPTOOL_URL:-http://localhost:3002}
-      - PHOBOS_LSX_URL=${PHOBOS_LSX_URL:-http://localhost:3005}
+      # - PHOBOS_AUTH_URL=${PHOBOS_AUTH_URL:-http://localhost:3000}
+      # - PHOBOS_MAPTOOL_URL=${PHOBOS_MAPTOOL_URL:-http://localhost:3002}
+      # - PHOBOS_LSX_URL=${PHOBOS_LSX_URL:-http://localhost:3005}
+      - LSX_SERVER_HOSTNAME=${LSX_SERVER_HOSTNAME}
+      - LSX_SERVER_PORT=${LSX_SERVER_PORT:-3005}
