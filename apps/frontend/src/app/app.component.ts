@@ -10,6 +10,8 @@ declare global {
   interface Window {
     __env?: {
       PHOBOS_AUTH_URL?: string;
+      LSX_SERVER_HOSTNAME?: string;
+      LSX_SERVER_PORT?: string;
     };
   }
 }
