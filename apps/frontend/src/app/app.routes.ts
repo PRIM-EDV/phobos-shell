@@ -25,5 +25,14 @@ export const routes: Routes = [
     },
     loadComponent: () => loadRemoteModule('phobos-lsx', './Component').then((m) => m.AppComponent),
     loadChildren: () => loadRemoteModule('phobos-lsx', './Routes').then((m) => m.routes)
+  },
+  {
+    path: 'cloak',
+    canActivate: [authzGuard],
+    data: {
+      roles: ['tec', 'sci', 'admin']
+    },
+    loadComponent: () => loadRemoteModule('phobos-cloak', './Component').then((m) => m.AppComponent),
+    loadChildren: () => loadRemoteModule('phobos-cloak', './Routes').then((m) => m.routes)
   }
 ];

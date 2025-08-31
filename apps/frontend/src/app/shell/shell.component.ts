@@ -35,6 +35,8 @@ export class ShellComponent {
         } else {
           return "TEC";
         }
+      case "cloak":
+        return "CLOAK";
       default:
         return "";
     }
@@ -58,6 +60,10 @@ export class ShellComponent {
         return "TECHNICAL";
       case "event":
         return "EVENT";
+      case "cluster":
+        return "MATRIX";
+      case "power":
+        return "PHASE";
       default:
         return "";
     }

@@ -16,6 +16,12 @@
     @if (this.view() == 'TEC') {
         <ph-topbar-item [label]="'TECHNICAL'" [class.active]="tab() === 'TECHNICAL'" (click)="this.navigate('lsx/technical')"></ph-topbar-item>
     }
+    @if (this.view() == 'CLOAK') {
+        <ph-topbar-item [label]="'MATRIX'" [class.active]="tab() === 'MATRIX'" (click)="this.navigate('cloak/cluster')"></ph-topbar-item>
+    }
+    @if (this.view() == 'CLOAK') {
+        <ph-topbar-item [label]="'PHASE'" [class.active]="tab() === 'PHASE'" (click)="this.navigate('cloak/power')"></ph-topbar-item>
+    }
     <div style="flex-grow: 1;"> </div>
     <div class="logout" (click)="this.logout()">
         <img src="/images/logout.svg" alt="Logout">
@@ -31,6 +37,12 @@
     }
     @if (this.authz.hasRole('tec')) { 
         <ph-sidebar-item [class.active]="view() === 'TEC'" (click)="this.navigate('lsx/technical')"> TEC </ph-sidebar-item>
+    }
+    @if (this.authz.hasRole('admin')  || (this.authz.hasRole('sci'))) { 
+        <ph-sidebar-item [class.active]="view() === 'CLOAK'" (click)="this.navigate('cloak/cluster')"> CLOAK </ph-sidebar-item>
+    }
+    @if (this.authz.hasRole('admin')  || (this.authz.hasRole('tec'))) { 
+        <ph-sidebar-item [class.active]="view() === 'CLOAK'" (click)="this.navigate('cloak/power')"> CLOAK </ph-sidebar-item>
     }
 </ph-sidebar>
 

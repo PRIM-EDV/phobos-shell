@@ -1,5 +1,6 @@
 {
 	"phobos-auth": "http://localhost:3000/remoteEntry.json",
 	"phobos-maptool": "http://localhost:4002/remoteEntry.json",
-	"phobos-lsx": "http://localhost:3005/remoteEntry.json"
+	"phobos-lsx": "http://localhost:3005/remoteEntry.json",
+	"phobos-cloak": "http://localhost:3006/remoteEntry.json"
 }
