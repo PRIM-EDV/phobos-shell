@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phobos-shell-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: phobos-shell
+  template:
+    metadata:
+      labels:
+        app: phobos-shell
+    spec:
+      containers:
+      - name: phobos-shell
+        image: phobos-shell:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3001
