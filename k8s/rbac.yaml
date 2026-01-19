@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: phobos-backend-sa
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: phobos-service-reader
+  namespace: default
+rules:
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: phobos-backend-discovery-binding
+  namespace: default
+subjects:
+- kind: ServiceAccount
+  name: phobos-backend-sa
+roleRef:
+  kind: Role
+  name: phobos-service-reader
+  apiGroup: rbac.authorization.k8s.io

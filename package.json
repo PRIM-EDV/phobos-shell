@@ -10,6 +10,7 @@
   "scripts": {
     "lerna": "lerna",
     "build": "lerna run build",
+    "mirrord:backend": "mirrord exec --target deployment/phobos-shell-deployment -- npm run start:backend:dev",
     "start:frontend": "npm run start -w apps/frontend",
     "start:frontend:dev": "npm run start:dev -w apps/frontend",
     "start:backend": "npm run start -w apps/backend",

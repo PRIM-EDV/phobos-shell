@@ -12,6 +12,7 @@ spec:
       labels:
         app: phobos-shell
     spec:
+      serviceAccountName: phobos-backend-sa
       containers:
       - name: phobos-shell
         image: phobos-shell:latest

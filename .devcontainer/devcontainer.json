@@ -1,0 +1,32 @@
+{
+    "name": "@phobos-shell/shell-devcontainer",
+    "dockerComposeFile": "./docker-compose.yml",
+    "service": "app",
+    "workspaceFolder": "/workspace",
+    "features": {
+        "ghcr.io/devcontainers/features/git:1": {},
+        "ghcr.io/devcontainers/features/git-lfs:1": {},
+        "ghcr.io/devcontainers/features/github-cli:1": {}
+    },
+    "postCreateCommand": "/workspace/.devcontainer/setup-git.sh",
+     "customizations": {
+        "vscode": {
+            "extensions": [
+                "angular.ng-template",
+                "metalbear.mirrord",
+                "ms-kubernetes-tools.vscode-kubernetes-tools",
+                "ms-vscode.vscode-json",
+                "ms-vscode.vscode-typescript-next"
+            ],
+            "settings": {
+                "git.enableSmartCommit": true,
+                "git.autofetch": true,
+                "git.confirmSync": false,
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "extensions.autoUpdate": false,
+                "extensions.autoCheckUpdates": false,
+                "mirrord.prompt_target": true
+            }
+        }
+    }
+}
