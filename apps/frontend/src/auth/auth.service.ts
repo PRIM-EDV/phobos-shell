@@ -14,7 +14,7 @@ import { TokenService } from './token.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PkceService } from './pkce.service';
 
-const PHOBOS_AUTH_URL = window.__env?.PHOBOS_AUTH_URL ? window.__env?.PHOBOS_AUTH_URL : `${window.location.protocol}//${window.location.hostname}:3000`;
+const PHOBOS_AUTH_URL = window.__env?.PHOBOS_AUTH_URL ? window.__env?.PHOBOS_AUTH_URL : `${window.location.protocol}//${window.location.hostname}`;
 const clientId = 'webapp';
 
 @Injectable({
@@ -89,7 +89,7 @@ export class AuthService {
     sessionStorage.setItem("pkce.verifier", verifier);
     
     const redirectUri = encodeURI(window.location.origin);
-    const url = `${PHOBOS_AUTH_URL}/auth/authorize?response_type=code&client_id=${clientId}&code_challenge_method=S256&code_challenge=${challenge}&redirect_uri=${redirectUri}`;
+    const url = `${PHOBOS_AUTH_URL}/auth/v1/authorize?response_type=code&client_id=${clientId}&code_challenge_method=S256&code_challenge=${challenge}&redirect_uri=${redirectUri}`;
     
     window.location.href = url;
   }

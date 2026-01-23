@@ -20,7 +20,9 @@ import { KEYUTIL, KJUR, RSAKey } from 'jsrsasign';
 
 import { JWK } from './interfaces/jwk.interface';
 
-const PHOBOS_AUTH_URL = window.__env?.PHOBOS_AUTH_URL ? window.__env?.PHOBOS_AUTH_URL : `${window.location.protocol}//${window.location.hostname}:3000`;
+// const PHOBOS_AUTH_URL = window.__env?.PHOBOS_AUTH_URL ? window.__env?.PHOBOS_AUTH_URL : `${window.location.protocol}//${window.location.hostname}:3000`;
+const PHOBOS_AUTH_URL = `${window.location.protocol}//${window.location.hostname}`;
+
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +47,7 @@ export class TokenService implements ITokenService {
    */
   public async requestAccessToken(code: string, verifier: string): Promise<void> {
     const clientId = 'webapp';
-    const url = `${PHOBOS_AUTH_URL}/auth/token`;
+    const url = `${PHOBOS_AUTH_URL}/auth/v1/token`;
     const body = {
       code: code,
       client_id: clientId,
@@ -62,7 +64,7 @@ export class TokenService implements ITokenService {
   }
 
   private async fetchCerts(): Promise<any[]> {
-    const url = `${PHOBOS_AUTH_URL}/auth/certs`;
+    const url = `${PHOBOS_AUTH_URL}/auth/v1/certs`;
     const response = await firstValueFrom(this.http.get<{ keys: any[] }>(url));
     return response.keys;
   }
