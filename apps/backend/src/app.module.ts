@@ -3,6 +3,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
 import { FederationController } from './api/federation.controller';
+import { DiscoveryService } from './infrastructure/discovery.service';
 
 @Module({
   imports: [
@@ -12,6 +13,6 @@ import { FederationController } from './api/federation.controller';
     }),
   ],
   controllers: [FederationController],
-  providers: [],
+  providers: [DiscoveryService],
 })
 export class AppModule {}
