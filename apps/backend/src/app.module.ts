@@ -4,6 +4,7 @@ import { join } from 'path';
 
 import { FederationController } from './api/federation.controller';
 import { DiscoveryService } from './infrastructure/discovery.service';
+import { WinstonLoggerModule } from './infrastructure/logger/winston/winston.logger.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { DiscoveryService } from './infrastructure/discovery.service';
       rootPath: join(__dirname, '..', 'public'),
       exclude: ['/federation.manifest.json'],
     }),
+    WinstonLoggerModule
   ],
   controllers: [FederationController],
   providers: [DiscoveryService],
