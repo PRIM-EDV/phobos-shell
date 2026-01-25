@@ -1,6 +1,6 @@
 {
   "name": "@phobos-shell/frontend",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -40,5 +40,8 @@
     "@types/crypto-js": "^4.2.2",
     "@types/node": "^22.7.5",
     "typescript": "~5.8.3"
+  },
+  "release-it": {
+    "git": false
   }
 }
