@@ -23,3 +23,5 @@ node_modules
 /.angular/cache
 .nx
 .cache
+.devcontainer
+.mirrord

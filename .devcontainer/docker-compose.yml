@@ -8,6 +8,10 @@ services:
       - "3001:3001"
     volumes:
       - ..:/workspace:cached
+
+      # Docker Daemon socket
+      - /var/run/docker.sock:/var/run/docker.sock 
+      - ~/.docker/config.json:/root/.docker/config.json:ro
       
       # Local node_modules
       - node_modules:/workspace/node_modules

@@ -14,12 +14,12 @@ export class FederationController {
     getFederationManifest(@Req() req, @Res() res: Response) {
         const protocol = req.protocol;
 
-        const config = {
-            "phobos-auth": authUrl,
-            "phobos-maptool": maptoolUrl,
-            "phobos-lsx": lsxUrl,
-            "phobos-cloak": cloakUrl
-        }
-        return res.json(config);
+        // const config = {
+        //     "phobos-auth": authUrl,
+        //     "phobos-maptool": maptoolUrl,
+        //     "phobos-lsx": lsxUrl,
+        //     "phobos-cloak": cloakUrl
+        // }
+        return res.json({});
     }
 }
