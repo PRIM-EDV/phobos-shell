@@ -15,7 +15,7 @@ spec:
       serviceAccountName: phobos-backend-sa
       containers:
       - name: phobos-shell
-        image: prim/phobos-shell:1.0.0
+        image: prim/phobos-shell:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3001
