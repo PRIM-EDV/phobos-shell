@@ -1,7 +1,7 @@
 import { Controller, Get, Req, Res } from "@nestjs/common";
 import { Response } from "express";
 
-import { DiscoveryService } from "src/infrastructure/discovery.service";
+import { DiscoveryService } from "src/infrastructure/discovery/discovery.service";
 
 @Controller()
 export class FederationController {
@@ -13,13 +13,14 @@ export class FederationController {
     @Get('federation.manifest.json')
     getFederationManifest(@Req() req, @Res() res: Response) {
         const protocol = req.protocol;
+        const manifest = new Map<string, string>();
+        const mfes = this.discoveryService.mfes;
 
-        // const config = {
-        //     "phobos-auth": authUrl,
-        //     "phobos-maptool": maptoolUrl,
-        //     "phobos-lsx": lsxUrl,
-        //     "phobos-cloak": cloakUrl
-        // }
-        return res.json({});
+        mfes.map(mfe => {
+            const url = `${protocol}://${req.hostname}:${req.port}${mfe.path}`;
+            manifest.set(mfe.name, url);
+        });
+        
+        return res.json(Object.fromEntries(manifest));
     }
 }

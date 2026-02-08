@@ -9,6 +9,9 @@ import { WinstonLogger } from "../logger/winston/winston.logger";
 
 @Injectable()
 export class DiscoveryService implements OnModuleInit, OnModuleDestroy {
+
+  public mfes: MfeDiscovery[] = [];
+
   private kc = new k8s.KubeConfig();
   private k8sApi: k8s.CoreV1Api;
   private k8sNetworkingApi: k8s.NetworkingV1Api;
@@ -130,8 +133,8 @@ export class DiscoveryService implements OnModuleInit, OnModuleDestroy {
     this.k8sWatchRequest = await this.k8sWatch.watch(
       '/api/v1/namespaces/default/services',
       { labelSelector: 'type=mfe' },
-      () => {
-        this.discover();
+      async () => {
+        this.mfes = await this.discover();
       },
       (err) => {
         this.k8sWatchRequest = null;
