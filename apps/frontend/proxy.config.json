@@ -1,0 +1,8 @@
+{
+  "/federation.manifest.json": {
+    "target": "http://host.docker.internal",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}
