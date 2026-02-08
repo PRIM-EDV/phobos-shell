@@ -3,11 +3,11 @@ import { AppModule } from './app.module';
 import { WinstonLogger } from './infrastructure/logger/winston/winston.logger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {bufferLogs: true});
   const logger = await app.resolve(WinstonLogger);
 
   app.useLogger(logger);
-  
+
   await app.listen(3001);
 }
 bootstrap();

@@ -3,16 +3,19 @@ import { TransformableInfo } from 'logform';
 import * as Winston from 'winston';
 
 const logFormat = Winston.format.printf((info: TransformableInfo) => {
-    return `${info.timestamp} ${info.level} ${info.context}${info.message}`;
+    return `${info.timestamp} ${info.level} ${info.context}${info.message} ${info.ms}`;
 });
 
 export const winstonConfig = {
     transports: [
         new Winston.transports.Console({
             format: Winston.format.combine(
+                Winston.format.ms(),
                 Winston.format(info => {
                     info.level = info.level.toUpperCase().padStart(7)
                     info.context = info.context ? `\x1b[33m[${info.context}]\x1b[39m ` : '';
+                    info.ms = info.ms ? ` \x1b[33m${info.ms}\x1b[39m` : '';
+
                     return info;
                 })(),
                 Winston.format.colorize({all: false, level: true, message: true}),
