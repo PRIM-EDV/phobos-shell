@@ -17,8 +17,20 @@ export class FederationController {
         const mfes = this.discoveryService.mfes;
 
         mfes.map(mfe => {
-            const url = `${protocol}://${req.hostname}:${req.port}${mfe.path}`;
+            const url = `${protocol}://${req.host}${mfe.path}/remoteEntry.json`;
             manifest.set(mfe.name, url);
+        });
+        
+        return res.json(Object.fromEntries(manifest));
+    }
+
+    @Get('phobos.manifest.json')
+    getPhobosManifest(@Req() req, @Res() res: Response) {
+        const manifest = new Map<string, string>();
+        const mfes = this.discoveryService.mfes;
+
+        mfes.map(mfe => {
+            manifest.set(mfe.name, mfe.path.startsWith('/') ? mfe.path.substring(1) : mfe.path);
         });
         
         return res.json(Object.fromEntries(manifest));

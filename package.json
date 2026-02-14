@@ -1,6 +1,6 @@
 {
   "name": "@phobos-shell/shell",
-  "version": "1.0.2-alpha.11",
+  "version": "1.0.2-alpha.21",
   "private": true,
   "workspaces": [
     "apps/*",

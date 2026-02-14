@@ -3,6 +3,20 @@
     "target": "http://host.docker.internal",
     "secure": false,
     "changeOrigin": true,
-    "logLevel": "debug"
+    "logLevel": "debug",
+    "headers": {
+      "Origin": "http://localhost",
+      "Host": "localhost"
+    }
+  },
+    "/phobos.manifest.json": {
+    "target": "http://host.docker.internal",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "headers": {
+      "Origin": "http://localhost",
+      "Host": "localhost"
+    }
   }
 }

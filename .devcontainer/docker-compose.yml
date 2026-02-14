@@ -23,5 +23,7 @@ services:
       - ~/.gitconfig:/tmp/host-gitconfig:ro
       - ~/.git-credentials:/home/node/.git-credentials:ro
       - ~/.ssh:/home/node/.ssh:ro
+    environment:
+      - DOCKER_CONTEXT=default
 volumes:
   node_modules:
