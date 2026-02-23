@@ -24,9 +24,15 @@
     "@angular-devkit/build-angular": "21.1.5",
     "@angular/cli": "21.1.5",
     "@angular/compiler-cli": "21.1.5",
+    "@nestjs/cli": "^11.0.16",
     "@release-it/bumper": "^7.0.5",
-    "lerna": "^8.1.2",
+    "lerna": "^9.0.4",
     "release-it": "^19.2.4"
+  },
+  "overrides": {
+    "ajv": "^8.17.1",
+    "glob": "^11.1.0",
+    "tar": "^7.5.8"
   },
   "release-it": {
     "$schema": "https://unpkg.com/release-it/schema/release-it.json",
@@ -52,5 +58,8 @@
         "docker build -t prim/phobos-shell:${version} -t prim/phobos-shell:latest ."
       ]
     }
+  },
+  "dependencies": {
+    "@oxc-parser/binding-win32-x64-msvc": "^0.115.0"
   }
 }
