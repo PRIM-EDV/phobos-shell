@@ -1,6 +1,6 @@
 {
   "name": "@phobos-shell/shell",
-  "version": "1.0.2-alpha.21",
+  "version": "1.0.2-alpha.23",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -17,12 +17,13 @@
     "start:backend": "npm run start -w apps/backend",
     "start:backend:dev": "npm run start:dev -w apps/backend",
     "release": "release-it --workspaces",
-    "release:pre": "npm run release -- --preRelease=alpha --no-git --no-github"
+    "release:pre": "npm run release -- --preRelease=alpha --no-git --no-github",
+    "test:frontend": "npm run test -w apps/frontend"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "20.1.3",
-    "@angular/cli": "20.1.3",
-    "@angular/compiler-cli": "20.1.3",
+    "@angular-devkit/build-angular": "21.1.5",
+    "@angular/cli": "21.1.5",
+    "@angular/compiler-cli": "21.1.5",
     "@release-it/bumper": "^7.0.5",
     "lerna": "^8.1.2",
     "release-it": "^19.2.4"
