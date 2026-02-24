@@ -9,7 +9,7 @@ COPY apps/backend/package.json ./apps/backend/
 COPY apps/frontend/package.json ./apps/frontend/
 COPY libs ./libs
 
-RUN --mount=type=cache,target=/root/.npm npm install --prefer-offline --no-audit
+RUN --mount=type=cache,target=/root/.npm npm install
 
 # Build frontend
 FROM deps AS frontend

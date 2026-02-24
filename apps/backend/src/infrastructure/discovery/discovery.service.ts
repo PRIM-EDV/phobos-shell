@@ -56,7 +56,8 @@ export class DiscoveryService implements OnModuleInit, OnModuleDestroy {
       const ingresses = await this.discoverIngresses();
       const mfes = services.map(svc => {
         const ingress = ingresses.find(ing => ing.services.some(s => s.service === svc.name));
-        const path = ingress ? ingress.services.find(s => s.service === svc.name)?.path : '/';
+        const ingressPath = ingress ? ingress.services.find(s => s.service === svc.name)?.path : '/';
+        const path = ingressPath.split('(')[0];
 
         return {
           name: svc.app,

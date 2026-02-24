@@ -1,6 +1,6 @@
 {
   "name": "@phobos-shell/shell",
-  "version": "1.1.0",
+  "version": "2.0.0-3",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -58,8 +58,5 @@
         "docker build -t prim/phobos-shell:${version} -t prim/phobos-shell:latest ."
       ]
     }
-  },
-  "dependencies": {
-    "@oxc-parser/binding-win32-x64-msvc": "^0.115.0"
   }
 }

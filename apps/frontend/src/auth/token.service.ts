@@ -12,17 +12,15 @@
 import { HttpClient } from '@angular/common/http';
 import { effect, Injectable, signal, WritableSignal } from '@angular/core';
 import { ITokenService } from '@phobos/core';
-import { firstValueFrom } from 'rxjs';
 
+import { firstValueFrom } from 'rxjs';
 import { KEYUTIL, KJUR, RSAKey } from 'jsrsasign';
 
-// import * as jose from 'jose'
-
 import { JWK } from './interfaces/jwk.interface';
+import { RegistryService } from '../registry/registry.service';
 
-// const PHOBOS_AUTH_URL = window.__env?.PHOBOS_AUTH_URL ? window.__env?.PHOBOS_AUTH_URL : `${window.location.protocol}//${window.location.hostname}:3000`;
-const PHOBOS_AUTH_URL = `${window.location.protocol}//${window.location.hostname}`;
 
+const DEFAULT_AUTH_URL = `${window.location.protocol}//${window.location.hostname}/app/auth`;
 
 @Injectable({
   providedIn: 'root'
@@ -35,9 +33,21 @@ export class TokenService implements ITokenService {
   syncRefreshToken = this.localStorageSyncEffect(this.refreshToken, 'refresh.token');
   validateAccessToken = this.validateAccessTokenEffect(this.accessToken);
 
+  private authApiUrl: string;
+
   constructor(
+    private registry: RegistryService,
     private http: HttpClient
-  ) { }
+  ) { 
+    const authProvider = this.registry.find({ name: 'phobos-auth' });
+
+    if (authProvider.length === 0) {
+      console.warn('Auth provider not found in registry, using default URL');
+      this.authApiUrl = DEFAULT_AUTH_URL;
+    } else {
+      this.authApiUrl = authProvider[0].apiUrl.toString();
+    }
+  }
 
   /**
    * Retrieves the access token from the URL and stores it in the local storage.
@@ -47,7 +57,7 @@ export class TokenService implements ITokenService {
    */
   public async requestAccessToken(code: string, verifier: string): Promise<void> {
     const clientId = 'webapp';
-    const url = `${PHOBOS_AUTH_URL}/auth/v1/token`;
+    const url = `${this.authApiUrl}/v1/token`;
     const body = {
       code: code,
       client_id: clientId,
@@ -64,7 +74,7 @@ export class TokenService implements ITokenService {
   }
 
   private async fetchCerts(): Promise<any[]> {
-    const url = `${PHOBOS_AUTH_URL}/auth/v1/certs`;
+    const url = `${this.authApiUrl}/v1/certs`;
     const response = await firstValueFrom(this.http.get<{ keys: any[] }>(url));
     return response.keys;
   }

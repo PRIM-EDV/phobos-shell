@@ -13,15 +13,17 @@ import { computed, effect, Injectable, Signal } from '@angular/core';
 import { TokenService } from './token.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PkceService } from './pkce.service';
+import { RegistryService } from '../registry/registry.service';
 
-const PHOBOS_AUTH_URL = window.__env?.PHOBOS_AUTH_URL ? window.__env?.PHOBOS_AUTH_URL : `${window.location.protocol}//${window.location.hostname}`;
+const DEFAULT_AUTH_URL = `${window.location.protocol}//${window.location.hostname}/app/auth`;
+
 const clientId = 'webapp';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  
+
   public isAuthenticated: Signal<boolean> = computed(() => {
     const accessToken = this.tokenService.accessToken();
     return accessToken !== null && accessToken !== undefined;
@@ -33,12 +35,24 @@ export class AuthService {
     }
   })
 
+  private authApiUrl: string;
+
   constructor(
     private readonly pkce: PkceService,
     private readonly tokenService: TokenService,
+    private readonly registry: RegistryService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-   ) { }
+  ) {
+    const authProvider = this.registry.find({ name: 'phobos-auth' });
+
+    if (authProvider.length === 0) {
+      console.warn('Auth provider not found in registry, using default URL');
+      this.authApiUrl = DEFAULT_AUTH_URL;
+    } else {
+      this.authApiUrl = authProvider[0].apiUrl.toString();
+    }
+  }
 
   /**
    * Authenticates the user.
@@ -87,10 +101,10 @@ export class AuthService {
     const verifier = this.pkce.generateCodeVerifier(128);
     const challenge = await this.pkce.generateCodeChallenge(verifier);
     sessionStorage.setItem("pkce.verifier", verifier);
-    
+
     const redirectUri = encodeURI(window.location.origin);
-    const url = `${PHOBOS_AUTH_URL}/auth/v1/authorize?response_type=code&client_id=${clientId}&code_challenge_method=S256&code_challenge=${challenge}&redirect_uri=${redirectUri}`;
-    
+    const url = `${this.authApiUrl}/v1/authorize?response_type=code&client_id=${clientId}&code_challenge_method=S256&code_challenge=${challenge}&redirect_uri=${redirectUri}`;
+
     window.location.href = url;
   }
 
