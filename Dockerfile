@@ -1,34 +1,41 @@
+# Node.js base image
 FROM node:25.7.0-slim AS node
 
-FROM node AS package
-RUN apt-get update && apt-get install -y jq 
+# Prepare package.json
+FROM node AS package.json
+RUN apt-get update && apt-get install -y jq
 
 WORKDIR /opt/phobos-shell
 
-COPY package.json .
-RUN jq 'del(.version)' package.json > package.json.slim
+COPY package.json ./
+COPY apps/backend/package.json ./apps/backend/
+COPY apps/frontend/package.json ./apps/frontend/
 
+RUN jq 'del(.version)' package.json > package.json.slim && mv package.json.slim package.json
+RUN jq 'del(.version)' apps/backend/package.json > apps/backend/package.json.slim && mv apps/backend/package.json.slim apps/backend/package.json
+RUN jq 'del(.version)' apps/frontend/package.json > apps/frontend/package.json.slim && mv apps/frontend/package.json.slim apps/frontend/package.json
 
-FROM node AS deps
+# Install node modules
+FROM node AS modules
 RUN apt update && apt install python3 protobuf-compiler build-essential gettext -y
 
 WORKDIR /opt/phobos-shell
 
-COPY --from=package /opt/phobos-shell/package.json.slim ./package.json
-COPY apps/backend/package.json ./apps/backend/
-COPY apps/frontend/package.json ./apps/frontend/
+COPY --from=package.json /opt/phobos-shell ./
+
+COPY lerna*.json ./
 COPY libs ./libs
 
 RUN npm install
 
 # Build frontend
-FROM deps AS frontend
+FROM modules AS frontend
 
 COPY apps/frontend ./apps/frontend
 RUN npx lerna run build --scope @phobos-shell/frontend --include-dependencies
 
 # Build backend
-FROM deps AS backend
+FROM modules AS backend
 
 COPY apps/backend ./apps/backend
 RUN npx lerna run build --scope @phobos-shell/backend --include-dependencies
