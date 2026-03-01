@@ -24,49 +24,51 @@ export class ShellComponent {
   public view: Signal<string> = computed(() => {
     const url = this.currentUrl();
     const parts = url.split("/").filter(Boolean);
-    switch (parts[0]) {
-      case "maptool":
-        return "TACOP";
-      case "admin":
-        return "ADMIN";
-      case "lsx":
-        if (this.authz.hasRole('sl') || this.authz.hasRole('admin')) {
-          return "SL";
-        } else {
-          return "TEC";
-        }
-      case "cloak":
-        return "CLOAK";
-      default:
-        return "";
-    }
+    // switch (parts[0]) {
+    //   case "maptool":
+    //     return "TACOP";
+    //   case "admin":
+    //     return "ADMIN";
+    //   case "lsx":
+    //     if (this.authz.hasRole('sl') || this.authz.hasRole('admin')) {
+    //       return "SL";
+    //     } else {
+    //       return "TEC";
+    //     }
+    //   case "cloak":
+    //     return "CLOAK";
+    //   default:
+    //     return "";
+    // }
+    return parts[0] || "";
   });
 
   public tab: Signal<string> = computed(() => {
     const url = this.currentUrl();
     const parts = url.split("/").filter(Boolean);
-    switch (parts[1]) {
-      case "map":
-        return "MAP";
-      case "squad":
-        return "SQUAD";
-      case "user":
-        return "USER";
-      case "general":
-        return "GENERAL";
-      case "drone":
-        return "DRONE";
-      case "technical":
-        return "TECHNICAL";
-      case "event":
-        return "EVENT";
-      case "cluster":
-        return "MATRIX";
-      case "power":
-        return "PHASE";
-      default:
-        return "";
-    }
+    // switch (parts[1]) {
+    //   case "map":
+    //     return "MAP";
+    //   case "squad":
+    //     return "SQUAD";
+    //   case "user":
+    //     return "USER";
+    //   case "general":
+    //     return "GENERAL";
+    //   case "drone":
+    //     return "DRONE";
+    //   case "technical":
+    //     return "TECHNICAL";
+    //   case "event":
+    //     return "EVENT";
+    //   case "cluster":
+    //     return "MATRIX";
+    //   case "power":
+    //     return "PHASE";
+    //   default:
+    //     return "";
+    // }
+    return parts[1] || "";
   });
 
   private currentUrl: WritableSignal<string> = signal("");
