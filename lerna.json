@@ -4,6 +4,7 @@
    "packages": [
     "apps/*",
     "libs/*",
-    "libs/lsx/*"
+    "libs/lsx/*",
+    "libs/phobos/*"
   ]
 }
