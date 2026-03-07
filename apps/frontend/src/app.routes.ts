@@ -5,38 +5,19 @@ import { authzGuard } from './auth/authz.guard';
 
 const staticRoutes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '' },
-  // {
-  //   path: 'maptool',
-  //   loadComponent: () => loadRemoteModule('phobos-maptool', './Component').then((m) => m.AppComponent),
-  //   loadChildren: () => loadRemoteModule('phobos-maptool', './Routes').then((m) => m.routes),
-  // },
-  // {
-  //   path: 'admin/user',
-  //   canActivate: [authzGuard],
-  //   data: {
-  //     roles: ['admin']
-  //   },
-  //   loadComponent: () => loadRemoteModule('phobos-auth', './Component').then((m) => m.AdminComponent)
-  // },
-  // {
-  //   path: 'lsx',
-  //   canActivate: [authzGuard],
-  //   data: {
-  //     roles: ['tec', 'sl', 'admin']
-  //   },
-  //   loadComponent: () => loadRemoteModule('phobos-lsx', './Component').then((m) => m.AppComponent),
-  //   loadChildren: () => loadRemoteModule('phobos-lsx', './Routes').then((m) => m.routes)
-  // },
-  // {
-  //   path: 'cloak',
-  //   canActivate: [authzGuard],
-  //   data: {
-  //     roles: ['tec', 'sci', 'admin']
-  //   },
-  //   loadComponent: () => loadRemoteModule('phobos-cloak', './Component').then((m) => m.AppComponent),
-  //   loadChildren: () => loadRemoteModule('phobos-cloak', './Routes').then((m) => m.routes)
-  // }
 ];
+
+export async function appRoutes(): Promise<Routes> {
+  try {
+    const dynamicRoutes: Routes = await generateManifestRoutes();
+    console.log('Loaded dynamic routes:', dynamicRoutes);
+    return [...staticRoutes, ...dynamicRoutes];
+  } catch (error) {
+    console.error('Error loading federation manifest:', error);
+  }
+
+  return staticRoutes;
+}
 
 async function generateManifestRoutes(): Promise<Routes> {
   try {
@@ -84,18 +65,6 @@ async function generateManifestRoutes(): Promise<Routes> {
     console.error('Error loading manifest routes:', error);
     return [];
   }
-}
-
-export async function appRoutes(): Promise<Routes> {
-  try {
-    const dynamicRoutes: Routes = await generateManifestRoutes();
-    console.log('Loaded dynamic routes:', dynamicRoutes);
-    return [...staticRoutes, ...dynamicRoutes];
-  } catch (error) {
-    console.error('Error loading federation manifest:', error);
-  }
-
-  return staticRoutes;
 }
 
 function getRouteRoles(routes: Routes): string[] {

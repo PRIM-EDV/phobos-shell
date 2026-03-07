@@ -13,6 +13,10 @@ export class RegistryService implements IRegistryService {
     private readonly httpClient: HttpClient
   ) { }
 
+  public find(query: Partial<Mfe>): Mfe[] {
+    return this.mfes.filter(mfe => this.deepMatch(mfe, query));
+  }
+
   public async hydrate(): Promise<void> {
     try {
       const federationManifestResponse = await firstValueFrom(this.httpClient.get<Record<string, string>>('federation.manifest.json'));
@@ -42,12 +46,6 @@ export class RegistryService implements IRegistryService {
       console.error('Error loading manifest routes:', error);
     }
   }
-
-
-  public find(query: Partial<Mfe>): Mfe[] {
-    return this.mfes.filter(mfe => this.deepMatch(mfe, query));
-  }
-
 
   private deepMatch(target: any, query: any): boolean {
     if (query === null || typeof query !== 'object') {
