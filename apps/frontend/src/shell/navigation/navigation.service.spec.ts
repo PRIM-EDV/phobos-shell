@@ -21,15 +21,15 @@ describe('NavigationService', () => {
   beforeEach(() => {
     registryServiceMock = {
       find: vi.fn().mockReturnValue([
-        { name: 'auth', baseUrl: new URL('http://phobos.internal/auth') },
-        { name: 'maptool', baseUrl: new URL('http://phobos.internal/maptool') }
+        { name: 'auth', baseUrl: new URL('http://phobos.internal/app/auth') },
+        { name: 'maptool', baseUrl: new URL('http://phobos.internal/app/maptool') }
       ])
     };
 
     vi.mocked(loadRemoteModule).mockImplementation((remoteName: string, modulePath: string) => {
       const remotes = new Map<string, any>([
-        ['auth', { routes: [{ path: '/admin', data: { app: 'ADMIN', tab: 'USER', roles: ['sl', 'admin'] } }] }],
-        ['maptool', { routes: [{ path: '/map', data: { app: 'TACOP', tab: 'MAP', roles: ['sl', 'admin', 'tacop'] } }] }],
+        ['auth', { routes: [{ path: 'admin', data: { app: 'ADMIN', tab: 'USER', roles: ['sl', 'admin'] } }] }],
+        ['maptool', { routes: [{ path: 'map', data: { app: 'TACOP', tab: 'MAP', roles: ['sl', 'admin', 'tacop'] } }] }],
       ]);
 
       return modulePath === './Routes' ? remotes.get(remoteName) : {};
@@ -56,11 +56,11 @@ describe('NavigationService', () => {
     expect(views[0].name).toBe('ADMIN');
     expect(views[0].tabs.length).toBe(1);
     expect(views[0].tabs[0].name).toBe('USER');
-    expect(views[0].tabs[0].route).toBe('/admin');
+    expect(views[0].tabs[0].route).toBe('/app/auth/admin');
   });
 
   it('should set current view and tab based on URL', async () => {
-    routerEventsSubject.next(new NavigationEnd(1, '/', '/auth/admin'));
+    routerEventsSubject.next(new NavigationEnd(1, '/', '/app/auth/admin'));
     TestBed.tick();
 
     const currentView = service.view();

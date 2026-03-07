@@ -22,7 +22,7 @@ export class NavigationService {
    * Current active tab based on the current URL and views.
    */
   public tab = computed(() => {
-    const match = this.routingTable().find((entry) => this.currentUrl().startsWith(entry.fullPath));
+    const match = this.routingTable().find((entry) => this.currentUrl().startsWith(entry.route));
     return match ? match.tab : null;
   });
 
@@ -30,12 +30,12 @@ export class NavigationService {
    * Current active view based on the current URL and views.
    */
   public view = computed(() => {
-    const match = this.routingTable().find((entry) => this.currentUrl().startsWith(entry.fullPath));
+    const match = this.routingTable().find((entry) => this.currentUrl().startsWith(entry.route));
     return match ? match.view : null;
   });
 
   private readonly currentUrl = signal("");
-  private readonly routingTable = computed(() => this.views().flatMap(view => view.tabs.map(tab => ({ fullPath: `${view.baseRoute}${tab.route}`, view, tab }))));
+  private readonly routingTable = computed(() => this.views().flatMap(view => view.tabs.map(tab => ({ route: tab.route, view, tab }))));
 
   constructor(
     private readonly registryService: RegistryService,
@@ -75,7 +75,7 @@ export class NavigationService {
 
   private updateViews(route: Route, base: string): void {
     const view: View = { name: route.data?.["app"], baseRoute: base, tabs: [] };
-    const tab: Tab = { name: route.data?.["tab"], route: route.path ?? '' };
+    const tab: Tab = { name: route.data?.["tab"], route: `${base}/${route.path}` };
 
     this.views.update((views) => {
       const existingView = views.find((v) => v.name === view.name);

@@ -14,16 +14,16 @@ export class AuthzService {
 
   /**
    * Checks if the current user has the specified role.
-   * @param role The role to check against the user's token.
-   * @returns Promise resolving to true if the user has the role, false otherwise.
+   * @param roles The roles to check against the user's token.
+   * @returns True if the user has any of the specified roles, false otherwise.
    */
-  public hasRole(role: string): boolean {
+  public hasRole(roles: string[]): boolean {
     const token = this.tokenService.accessToken();
     if (!token) return false;
 
     try {
       const { scope: userRole } = jose.decodeJwt(token) as { scope?: string };
-      return userRole === role;
+      return roles.includes(userRole || '');
     } catch (error) {
       console.error('Error decoding token:', error);
       return false;

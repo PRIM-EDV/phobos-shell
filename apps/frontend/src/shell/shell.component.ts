@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, Signal, signal, WritableSignal } from "@angular/core";
-import { NavigationEnd, Router } from "@angular/router";
+import { AfterViewInit, Component, effect, inject } from "@angular/core";
+import { Router } from "@angular/router";
 import { PhSidebar, PhSidebarItem, PhTopbar, PhTopbarHeader, PhTopbarItem } from "@phobos/elements";
 
-import { filter } from "rxjs";
 import { AuthzService } from "../auth/authz.service";
 import { AuthService } from '../auth/auth.service';
+import { NavigationService } from './navigation/navigation.service';
 
 @Component({
   selector: "app-shell",
@@ -18,70 +18,26 @@ import { AuthService } from '../auth/auth.service';
     PhSidebarItem],
   standalone: true,
   templateUrl: "./shell.component.html",
-  styleUrl: "./shell.component.scss",
+  styleUrls: ["./shell.component.scss"],
 })
 export class ShellComponent {
-  public view: Signal<string> = computed(() => {
-    const url = this.currentUrl();
-    const parts = url.split("/").filter(Boolean);
-    // switch (parts[0]) {
-    //   case "maptool":
-    //     return "TACOP";
-    //   case "admin":
-    //     return "ADMIN";
-    //   case "lsx":
-    //     if (this.authz.hasRole('sl') || this.authz.hasRole('admin')) {
-    //       return "SL";
-    //     } else {
-    //       return "TEC";
-    //     }
-    //   case "cloak":
-    //     return "CLOAK";
-    //   default:
-    //     return "";
-    // }
-    return parts[0] || "";
-  });
+  public readonly navigation = inject(NavigationService);
 
-  public tab: Signal<string> = computed(() => {
-    const url = this.currentUrl();
-    const parts = url.split("/").filter(Boolean);
-    // switch (parts[1]) {
-    //   case "map":
-    //     return "MAP";
-    //   case "squad":
-    //     return "SQUAD";
-    //   case "user":
-    //     return "USER";
-    //   case "general":
-    //     return "GENERAL";
-    //   case "drone":
-    //     return "DRONE";
-    //   case "technical":
-    //     return "TECHNICAL";
-    //   case "event":
-    //     return "EVENT";
-    //   case "cluster":
-    //     return "MATRIX";
-    //   case "power":
-    //     return "PHASE";
-    //   default:
-    //     return "";
-    // }
-    return parts[1] || "";
+  private navigateToDefaultEffect = effect(() => {
+    const views = this.navigation.views();
+    if (views.length > 0) {
+      const defaultView = views[0];
+      if (defaultView.tabs.length > 0) {
+        this.navigate(defaultView.tabs[0].route);
+      }
+    }
   });
-
-  private currentUrl: WritableSignal<string> = signal("");
 
   constructor(
     public readonly authz: AuthzService,
     private readonly auth: AuthService,
     private readonly router: Router)
-  {
-    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
-      this.currentUrl.set((event as NavigationEnd).urlAfterRedirects);
-    });
-  }
+  { }
 
   public logout(): void {
     this.auth.logout();

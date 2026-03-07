@@ -11,6 +11,6 @@ export const authzGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: 
   if (!roles || roles.length === 0) {
     return authService.isAuthenticated();
   } else {
-    return authService.isAuthenticated() && roles.some(role => authzService.hasRole(role));
+    return authService.isAuthenticated() && roles.some(role => authzService.hasRole([role]));
   }
 };
