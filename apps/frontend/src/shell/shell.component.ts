@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, effect, inject } from "@angular/core";
+import { Component, effect, inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { PhSidebar, PhSidebarItem, PhTopbar, PhTopbarHeader, PhTopbarItem } from "@phobos/elements";
 
 import { AuthzService } from "../auth/authz.service";
 import { AuthService } from '../auth/auth.service';
 import { NavigationService } from './navigation/navigation.service';
+import { View } from './navigation/interfaces/view.interface';
 
 @Component({
   selector: "app-shell",
@@ -26,12 +27,9 @@ export class ShellComponent {
 
   private navigateToDefaultEffect = effect(() => {
     const views = this.navigation.views();
-    if (views.length > 0) {
-      const defaultView = views[0];
-      if (defaultView.tabs.length > 0) {
-        this.navigate(defaultView.tabs[0].route);
-      }
-    }
+    const defaultRoute = this.getDefaultRoute(views);
+
+    this.router.navigate([defaultRoute ?? ""]);
   });
 
   constructor(
@@ -45,5 +43,13 @@ export class ShellComponent {
 
   public navigate(view: string): void {
     this.router.navigate([view]);
+  }
+
+  public isAuthorizedView(view: View): boolean {
+    return view.tabs.some(tab => tab.roles.length === 0 || this.authz.hasRole(tab.roles));
+  }
+
+  private getDefaultRoute(views: View[]): string | undefined {
+    return views.flatMap(view => view.tabs).find(tab => this.authz.hasRole(tab.roles))?.route;
   }
 }

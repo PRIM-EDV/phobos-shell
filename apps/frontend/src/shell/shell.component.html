@@ -13,7 +13,7 @@
 </ph-topbar>
 <ph-sidebar [icon]="'/images/phoenix.svg'" style="grid-row: 1 / 3; grid-column: 1;">
     @for (view of navigation.views(); track $index) {
-        @if (view.tabs.length > 0 && view.tabs.some(tab => tab.roles.length === 0 || authz.hasRole(tab.roles))) {
+        @if (view.tabs.length > 0 && isAuthorizedView(view)) {
             <ph-sidebar-item [class.active]="navigation.view()?.name === view.name" (click)="navigate(view.tabs[0].route)">{{ view.name }}</ph-sidebar-item>
         }
     }

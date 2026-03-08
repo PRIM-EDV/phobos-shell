@@ -54,7 +54,6 @@ export class NavigationService {
     await Promise.all(remotes.map(async (remote) => {
       try {
         const routes = await this.fetchRemoteRoutes(remote);
-
         routes.forEach((route) => {
           this.updateViews(route, remote.baseUrl.pathname);
         });
@@ -67,14 +66,14 @@ export class NavigationService {
   private async fetchRemoteRoutes(remote: Mfe): Promise<Route[]> {
     try {
       const { routes } = await loadRemoteModule(remote.name, './Routes');
-      return routes.filter((r: Route) => r.data?.["app"] && r.data?.["tab"]);
+      return routes.filter((r: Route) => r.data?.["view"] && r.data?.["tab"]);
     } catch (error) {
       return [];
     }
   }
 
   private updateViews(route: Route, base: string): void {
-    const view: View = { name: route.data?.["app"], baseRoute: base, tabs: [] };
+    const view: View = { name: route.data?.["view"], baseRoute: base, tabs: [] };
     const tab: Tab = { name: route.data?.["tab"], route: `${base}/${route.path}`, roles: route.data?.["roles"] || [] };
 
     this.views.update((views) => {

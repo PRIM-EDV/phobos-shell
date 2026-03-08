@@ -28,8 +28,8 @@ describe('NavigationService', () => {
 
     vi.mocked(loadRemoteModule).mockImplementation((remoteName: string, modulePath: string) => {
       const remotes = new Map<string, any>([
-        ['auth', { routes: [{ path: 'admin', data: { app: 'ADMIN', tab: 'USER', roles: ['sl', 'admin'] } }] }],
-        ['maptool', { routes: [{ path: 'map', data: { app: 'TACOP', tab: 'MAP', roles: ['sl', 'admin', 'tacop'] } }] }],
+        ['auth', { routes: [{ path: 'admin', data: { view: 'ADMIN', tab: 'USER', roles: ['sl', 'admin'] } }] }],
+        ['maptool', { routes: [{ path: 'map', data: { view: 'TACOP', tab: 'MAP', roles: ['sl', 'admin', 'tacop'] } }] }],
       ]);
 
       return modulePath === './Routes' ? remotes.get(remoteName) : {};
