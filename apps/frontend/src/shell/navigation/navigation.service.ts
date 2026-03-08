@@ -75,7 +75,7 @@ export class NavigationService {
 
   private updateViews(route: Route, base: string): void {
     const view: View = { name: route.data?.["app"], baseRoute: base, tabs: [] };
-    const tab: Tab = { name: route.data?.["tab"], route: `${base}/${route.path}` };
+    const tab: Tab = { name: route.data?.["tab"], route: `${base}/${route.path}`, roles: route.data?.["roles"] || [] };
 
     this.views.update((views) => {
       const existingView = views.find((v) => v.name === view.name);

@@ -21,6 +21,7 @@ import { NavigationService } from './navigation/navigation.service';
   styleUrls: ["./shell.component.scss"],
 })
 export class ShellComponent {
+  public readonly authz = inject(AuthzService);
   public readonly navigation = inject(NavigationService);
 
   private navigateToDefaultEffect = effect(() => {
@@ -34,7 +35,6 @@ export class ShellComponent {
   });
 
   constructor(
-    public readonly authz: AuthzService,
     private readonly auth: AuthService,
     private readonly router: Router)
   { }
