@@ -1,6 +1,6 @@
 import { ApplicationConfig, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
-import { AUTHZ_SERVICE_TOKEN, TOKEN_SERVICE_TOKEN } from '@phobos/core';
+import { AUTHZ_SERVICE_TOKEN, MFE_REGISTRY_SERVICE_TOKEN, TOKEN_SERVICE_TOKEN } from '@phobos/core';
 
 import { TokenService } from './auth/token.service';
 import { AuthzService } from './auth/authz.service';
@@ -21,6 +21,10 @@ export const appConfig: ApplicationConfig = {
     {
       provide: TOKEN_SERVICE_TOKEN,
       useExisting: TokenService
+    },
+    {
+      provide: MFE_REGISTRY_SERVICE_TOKEN,
+      useExisting: RegistryService
     }
   ]
 };

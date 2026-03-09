@@ -99,7 +99,6 @@ export class NavigationService {
   private updateViews(route: Route, base: string): void {
     const view: View = { name: route.data?.["view"], baseRoute: base, tabs: [] };
     const tab: Tab = { name: route.data?.["tab"], route: `${base}/${route.path}`, roles: route.data?.["roles"] || [] };
-    console.log(`Adding view [${view.name}] with tab [${tab.name}] at route [${tab.route}]`);
     this.views.update((views) => {
       const existingView = views.find((v) => v.name === view.name);
 
