@@ -56,12 +56,12 @@ describe('NavigationService', () => {
     expect(views[0].name).toBe('ADMIN');
     expect(views[0].tabs.length).toBe(1);
     expect(views[0].tabs[0].name).toBe('USER');
-    expect(views[0].tabs[0].route).toBe('/app/auth/admin');
+    expect(views[0].tabs[0].route).toBe('/auth/admin');
     expect(views[0].tabs[0].roles).toEqual(['sl', 'admin']);
   });
 
   it('should set current view and tab based on URL', async () => {
-    routerEventsSubject.next(new NavigationEnd(1, '/', '/app/auth/admin'));
+    routerEventsSubject.next(new NavigationEnd(1, '/', '/auth/admin'));
     TestBed.tick();
 
     const currentView = service.view();

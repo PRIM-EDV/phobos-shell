@@ -10,7 +10,6 @@ const staticRoutes: Routes = [
 export async function appRoutes(): Promise<Routes> {
   try {
     const dynamicRoutes: Routes = await generateManifestRoutes();
-    console.log('Loaded dynamic routes:', dynamicRoutes);
     return [...staticRoutes, ...dynamicRoutes];
   } catch (error) {
     console.error('Error loading federation manifest:', error);
@@ -23,7 +22,6 @@ async function generateManifestRoutes(): Promise<Routes> {
   try {
     const federationManifestResponse = await fetch('federation.manifest.json');
     const phobosManifestResponse = await fetch('phobos.manifest.json');
-
     const federationManifest: Record<string, string> = await federationManifestResponse.json();
     const phobosManifest: Record<string, string> = await phobosManifestResponse.json();
 
@@ -36,7 +34,7 @@ async function generateManifestRoutes(): Promise<Routes> {
     const remoteConfigs = await Promise.all(remotes.map(async (remote) => {
       try {
         const routeModule = await loadRemoteModule(remote.name, './Routes');
-        const routePath = remote.remotePath;
+        const routePath = remote.remotePath.replace("/app/", "");
         const routeRoles = getRouteRoles(routeModule.routes);
 
         return { ...remote, routePath, routeRoles };
@@ -69,7 +67,7 @@ async function generateManifestRoutes(): Promise<Routes> {
 
 function getRouteRoles(routes: Routes): string[] {
   const routeRoles = routes
-    .filter((route) => route.data?.["app"] != null)
+    .filter((route) => route.data?.["view"] != null)
     .map((route) => (route.data?.["roles"] as string[]) || []);
 
   // Empty role set means parent route has to be unprotected

@@ -9,13 +9,13 @@ describe('RegistryService', () => {
 
   // Mock-Daten für die Manifest-Dateien
   const mockFederationManifest = {
-    'phobos-auth': 'http://localhost/auth/remoteEntry.json',
-    'phobos-maptool': 'http://localhost/maptool/remoteEntry.json'
+    'phobos-auth': 'http://localhost/app/auth/remoteEntry.json',
+    'phobos-maptool': 'http://localhost/app/maptool/remoteEntry.json'
   };
 
   const mockPhobosManifest = {
-    'phobos-auth': '/auth',
-    'phobos-maptool': '/maptool'
+    'phobos-auth': '/app/auth',
+    'phobos-maptool': '/app/maptool'
   };
 
   beforeEach(() => {
@@ -51,8 +51,8 @@ describe('RegistryService', () => {
 
     it('should parse manifests correctly', async () => {
       expect(service['mfes'][0].name).toBe('phobos-auth');
-      expect(service['mfes'][0].apiUrl.toString()).toBe('http://localhost/auth/api');
-      expect(service['mfes'][0].baseUrl.toString()).toBe('http://localhost/auth');
+      expect(service['mfes'][0].apiUrl.toString()).toBe('http://localhost/app/auth/api');
+      expect(service['mfes'][0].baseUrl.toString()).toBe('http://localhost/app/auth');
     });
   });
 
@@ -65,18 +65,18 @@ describe('RegistryService', () => {
     });
 
     it('should return all MFEs if query is empty', async () => {
-      const results = await service.find({});
+      const results = service.find({});
       expect(results.length).toBe(2);
     });
 
     it('should filter by name correctly', async () => {
-      const results = await service.find({ name: 'phobos-auth' });
+      const results = service.find({ name: 'phobos-auth' });
       expect(results.length).toBe(1);
       expect(results[0].name).toBe('phobos-auth');
     });
 
     it('should return empty array if no match found', async () => {
-      const results = await service.find({ name: 'non-existent' });
+      const results = service.find({ name: 'non-existent' });
       expect(results.length).toBe(0);
     });
   });

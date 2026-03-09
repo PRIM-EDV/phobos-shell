@@ -55,7 +55,8 @@ export class NavigationService {
       try {
         const routes = await this.fetchRemoteRoutes(remote);
         routes.forEach((route) => {
-          this.updateViews(route, remote.baseUrl.pathname);
+          const base = this.removePathPrefix(remote.baseUrl.pathname, '/app');
+          this.updateViews(route, base);
         });
       } catch (error) {
         console.error(`Skipping navigation for remote [${remote.name}]:`, error);
@@ -63,6 +64,11 @@ export class NavigationService {
     }));
   }
 
+  /**
+   * Fetches the routes from a remote module.
+   * @param remote The remote module from which to fetch routes.
+   * @returns A promise that resolves to an array of routes.
+   */
   private async fetchRemoteRoutes(remote: Mfe): Promise<Route[]> {
     try {
       const { routes } = await loadRemoteModule(remote.name, './Routes');
@@ -72,10 +78,28 @@ export class NavigationService {
     }
   }
 
+  /**
+   * Removes the specified prefix from the given path if it exists.
+   * @param path The path from which to remove the prefix.
+   * @param prefix The prefix to remove.
+   * @returns The path without the prefix if it was present, otherwise the original path.
+   */
+  private removePathPrefix(path: string, prefix: string): string {
+    if (path.startsWith(prefix)) {
+      return path.substring(prefix.length);
+    }
+    return path;
+  }
+
+  /**
+   * Updates the views and tabs based on the provided route and base path.
+   * @param route The route object containing view and tab information.
+   * @param base The base path for the route.
+   */
   private updateViews(route: Route, base: string): void {
     const view: View = { name: route.data?.["view"], baseRoute: base, tabs: [] };
     const tab: Tab = { name: route.data?.["tab"], route: `${base}/${route.path}`, roles: route.data?.["roles"] || [] };
-
+    console.log(`Adding view [${view.name}] with tab [${tab.name}] at route [${tab.route}]`);
     this.views.update((views) => {
       const existingView = views.find((v) => v.name === view.name);
 

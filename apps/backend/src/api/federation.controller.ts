@@ -30,7 +30,7 @@ export class FederationController {
         const mfes = this.discoveryService.mfes;
 
         mfes.map(mfe => {
-            manifest.set(mfe.name, mfe.path.startsWith('/') ? mfe.path.substring(1) : mfe.path);
+            manifest.set(mfe.name, mfe.path);
         });
         
         return res.json(Object.fromEntries(manifest));
