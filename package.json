@@ -11,7 +11,9 @@
   "scripts": {
     "lerna": "lerna",
     "build": "lerna run build",
-    "k8s:restart": "kubectl rollout restart deployment/phobos-shell-deployment",
+    "docker:build": "node scripts/docker-build.js",
+    "k8s:deploy": "helm upgrade --install phobos-shell ./k8s",
+    "k8s:status": "helm status phobos-shell",
     "mirrord:backend": "mirrord exec --target deployment/phobos-shell-deployment -- npm run start:backend:dev",
     "start:frontend": "npm run start -w apps/frontend",
     "start:frontend:dev": "npm run start:dev -w apps/frontend",
@@ -50,7 +52,11 @@
     "plugins": {
       "@release-it/bumper": {
         "out": [
-          "apps/*/package.json"
+          "apps/*/package.json",
+           {
+            "file": "k8s/Chart.yaml",
+            "path": "appVersion"
+          }
         ]
       }
     },
