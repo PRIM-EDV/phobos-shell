@@ -13,9 +13,6 @@ import { effect, Injectable, signal, WritableSignal } from "@angular/core";
 import { ITokenService } from "@phobos/core";
 
 import { firstValueFrom } from "rxjs";
-import { KEYUTIL, KJUR, RSAKey } from "jsrsasign";
-
-import { JWK } from "./interfaces/jwk.interface";
 import { RegistryService } from "../registry/registry.service";
 
 const DEFAULT_AUTH_URL = `${window.location.protocol}//${window.location.hostname}/app/auth`;
@@ -70,15 +67,9 @@ export class TokenService implements ITokenService {
     }
   }
 
-  private async fetchCerts(): Promise<any[]> {
-    const url = `${this.authApiUrl}/v1/certs`;
-    const response = await firstValueFrom(this.http.get<{ keys: any[] }>(url));
-    return response.keys;
-  }
-
   /**
    * Synchronizes the access and refresh tokens with local storage.
-   * 
+   *
    * @param {WritableSignal<string | null>} signal - The signal to synchronize with local storage.
    * @param {string} key - The key to use for local storage.
    */
@@ -95,62 +86,22 @@ export class TokenService implements ITokenService {
 
   /**
    * Validates if the given token is valid by verifying its signature and expiration.
-   * 
+   *
    * @param {WritableSignal<string | null>} token - The JWT token signal to validate
    */
   private validateAccessTokenEffect(token: WritableSignal<string | null>) {
-    return effect(async () => {      
+    return effect(async () => {
       try {
-        const jwks = await this.fetchCerts();
+        const url = `${this.authApiUrl}/v1/verify`;
+        const response = await firstValueFrom(this.http.post<{message: string}>(url, { token }, { observe: "response" }));
 
-        this.verifyJWKs(jwks as JWK[]);
-        this.verifyTokenExistence(token());
-        this.verifyTokenSignature(token() as string, jwks[0] as JWK);
-        this.verifyTokenExpiration(token() as string);
+        if (response.status != 200) {
+          throw new Error(response.body?.message);
+        }
       } catch (error) {
         console.error("Token validation failed:", error);
         token.set(null);
       }
     });
-  }
-
-  private verifyTokenExistence(token: string | null): void {
-    if (!token) {
-      throw new Error("No token found for validation");
-    }
-  }
-
-  /**
-   * Verifies the JWT token using the provided JWK.
-   * @param token The JWT token to verify.
-   * @param jwk The JSON Web Key used for verification.
-   * @returns The payload of the verified token.
-   */
-  private verifyTokenSignature(token: string, jwk: JWK): void {
-    const pubKey = KEYUTIL.getKey({ kty: jwk.kty, n: jwk.n, e: jwk.e }) as RSAKey;
-    const isValid = KJUR.jws.JWS.verify(token, pubKey, ["RS256"]);
-
-    if (!isValid) throw new Error("JWT signature validation failed");
-  }
-
-  /**
-   * Verifies if the JWT token has expired by checking the "exp" claim in the token's payload.
-   * @param token The JWT token to verify.
-   */
-  private verifyTokenExpiration(token: string): void {
-    const payload = KJUR.jws.JWS.parse(token).payloadObj;
-
-    // Check if token has expired
-    // const now = Math.floor(Date.now() / 1000);
-    // if (!payload.exp || now >= payload.exp) {
-    //   token.set(null);
-    //   return;
-    // }
-  }
-
-  private verifyJWKs(jwks: JWK[]): void {
-    if (jwks.length === 0) {
-      throw new Error("No JWKs found for token validation");
-    }
   }
 }
