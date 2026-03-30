@@ -94,9 +94,9 @@ export class TokenService implements ITokenService {
       if (token() == null) { return; }
       try {
         const url = `${this.authApiUrl}/v1/verify`;
-        await firstValueFrom(this.http.post(url, { token }));
-      } catch (error) {
-        console.error("Token validation failed:", error instanceof Error ? error.message : error);
+        await firstValueFrom(this.http.post(url, { token: token() }));
+      } catch (error: any) {
+        console.error("Token validation failed:", error.message ? error.message : error);
         token.set(null);
       }
     });
