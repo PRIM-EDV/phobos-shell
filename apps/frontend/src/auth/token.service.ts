@@ -91,15 +91,12 @@ export class TokenService implements ITokenService {
    */
   private validateAccessTokenEffect(token: WritableSignal<string | null>) {
     return effect(async () => {
+      if (token() == null) { return; }
       try {
         const url = `${this.authApiUrl}/v1/verify`;
-        const response = await firstValueFrom(this.http.post<{message: string}>(url, { token }, { observe: "response" }));
-
-        if (response.status != 200) {
-          throw new Error(response.body?.message);
-        }
+        await firstValueFrom(this.http.post(url, { token }));
       } catch (error) {
-        console.error("Token validation failed:", error);
+        console.error("Token validation failed:", error instanceof Error ? error.message : error);
         token.set(null);
       }
     });
