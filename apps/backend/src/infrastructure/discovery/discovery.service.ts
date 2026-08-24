@@ -16,7 +16,8 @@ export class DiscoveryService implements OnModuleInit, OnModuleDestroy {
   private k8sApi: k8s.CoreV1Api;
   private k8sNetworkingApi: k8s.NetworkingV1Api;
   private k8sWatch: k8s.Watch;
-  private k8sWatchRequest: AbortController | null = null;
+  private k8sServiceWatchRequest: AbortController | null = null;
+  private k8sIngressWatchRequest: AbortController | null = null;
 
   constructor(
     private readonly logger: WinstonLogger
@@ -35,14 +36,27 @@ export class DiscoveryService implements OnModuleInit, OnModuleDestroy {
   }
 
   onModuleInit() {
-    this.watch().then().catch(err => {
-      this.logger.error(`Error starting discovery watch: ${err}`);
+    this.discover().then(mfes => {
+      this.mfes = mfes;
+    }).catch(err => {
+      this.logger.error(`Error running initial discovery: ${err}`);
+    });
+
+    this.watchServices().catch(err => {
+      this.logger.error(`Error starting service discovery watch: ${err}`);
+    });
+
+    this.watchIngresses().catch(err => {
+      this.logger.error(`Error starting ingress discovery watch: ${err}`);
     });
   }
 
   onModuleDestroy() {
-    if (this.k8sWatchRequest) {
-      this.k8sWatchRequest.abort();
+    if (this.k8sServiceWatchRequest) {
+      this.k8sServiceWatchRequest.abort();
+    }
+    if (this.k8sIngressWatchRequest) {
+      this.k8sIngressWatchRequest.abort();
     }
   }
 
@@ -126,20 +140,41 @@ export class DiscoveryService implements OnModuleInit, OnModuleDestroy {
   /**
    * Watches for changes to Kubernetes services with label 'type=mfe' in the default namespace
    * and triggers discovery when changes occur. Automatically restarts the watch on errors.
-   * @returns 
+   * @returns
    */
-  private async watch() {
-    if (this.k8sWatchRequest) { return; }
+  private async watchServices() {
+    if (this.k8sServiceWatchRequest) { return; }
 
-    this.k8sWatchRequest = await this.k8sWatch.watch(
+    this.k8sServiceWatchRequest = await this.k8sWatch.watch(
       '/api/v1/namespaces/default/services',
       { labelSelector: 'type=mfe' },
       async () => {
         this.mfes = await this.discover();
       },
       (err) => {
-        this.k8sWatchRequest = null;
-        setTimeout(() => this.watch(), 5000);
+        this.k8sServiceWatchRequest = null;
+        setTimeout(() => this.watchServices(), 5000);
+      }
+    );
+  }
+
+  /**
+   * Watches for changes to Kubernetes ingresses in the default namespace and triggers
+   * discovery when changes occur. Automatically restarts the watch on errors.
+   * @returns
+   */
+  private async watchIngresses() {
+    if (this.k8sIngressWatchRequest) { return; }
+
+    this.k8sIngressWatchRequest = await this.k8sWatch.watch(
+      '/apis/networking.k8s.io/v1/namespaces/default/ingresses',
+      {},
+      async () => {
+        this.mfes = await this.discover();
+      },
+      (err) => {
+        this.k8sIngressWatchRequest = null;
+        setTimeout(() => this.watchIngresses(), 5000);
       }
     );
   }
