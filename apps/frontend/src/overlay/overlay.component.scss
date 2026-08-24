@@ -1,0 +1,89 @@
+:host {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 9999;
+
+    background-color: #1f1f1f;
+
+    pointer-events: none;
+    overflow: hidden;
+    background: black;
+}
+
+div.dangerbar {
+    left: 0; right: 0;
+    display: flex;
+    height: 48px;
+}
+
+div.backdrop {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(rgba(222, 4, 0, 0.1), rgba(222, 4, 0, 0.1) 50%, rgba(222, 4, 0, 0.001) 100%);
+
+}
+
+div.phoenix {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+
+    opacity: 0.35;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 30%;
+    // background-image: url('../../assets/img/phoenix_bg.png');
+}
+
+div.content {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Fira Code';
+
+    padding: 24px;
+
+    div.header {
+        padding: 8px;
+        font-size: 24px;
+        margin-bottom: 48px;
+        text-align: center;
+        margin-left: auto; margin-right: auto;
+        color: rgba(222, 4, 0 ,1);
+        margin-top: 24px;
+        padding: 0 24px 24px 24px;
+        border-bottom: 2px solid rgba(222, 4, 0 ,1);
+        
+    }
+
+    div.message {
+        display: flex;
+        font-size: 16px;
+        color: #e3e8d5;
+        max-width: 800px;
+        margin-bottom: 48px;
+        margin-left: auto; margin-right: auto;
+
+        align-items: center;
+        justify-content: center;
+
+        img {
+            height: 128px
+        }
+
+        span {
+            padding: 0 24px 0 24px;
+        }
+    }
+}
+
+div.stripes {
+    flex-grow:1; 
+    background: repeating-linear-gradient(-45deg, rgba(222, 4, 0 ,1), rgba(222, 4, 0 ,1) 20px,rgba(0,0,0,0.10) 20px, rgba(0,0,0,0.10) 40px);
+}

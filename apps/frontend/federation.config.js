@@ -11,9 +11,8 @@ module.exports = withNativeFederation({
     'rxjs/ajax',
     'rxjs/fetch',
     'rxjs/testing',
-    'rxjs/webSocket',
-    'jsrsasign'
-    // Add further packages you don't need at runtime
+    'jsrsasign',
+    '@phobos-lsx/protocol', 
   ]
 
   // Please read our FAQ about sharing libs:

@@ -4,6 +4,9 @@ import { ShellComponent } from "./shell/shell.component";
 import { filter } from "rxjs";
 import { AuthzService } from "./auth/authz.service";
 import { AuthService } from "./auth/auth.service";
+import { TokenService } from "./auth/token.service";
+import { LsxGateway } from "./infrastructure/gateway/lsx/lsx.gateway";
+import { OverlayComponent } from "./overlay/overlay.component";
 
 
 declare global {
@@ -19,7 +22,7 @@ declare global {
 @Component({
   selector: "app-root",
   standalone: true,
-  imports: [RouterOutlet, ShellComponent],
+  imports: [RouterOutlet, ShellComponent, OverlayComponent],
   templateUrl: "./app.component.html",
   styles: [],
 })
@@ -34,9 +37,17 @@ export class AppComponent {
     }
   });
 
+  autoLsxGatewayConnection = effect(async () => {
+    if (this.tokenService.accessToken() && !this.lsxGateway.isConnected()) {
+      await this.connectToLsxGateway();
+    }
+  });
+
   constructor(
     private readonly auth: AuthService,
     private readonly authz: AuthzService,
+    private readonly tokenService: TokenService,
+    private readonly lsxGateway: LsxGateway,
     private readonly router: Router
   ) { }
 
@@ -53,5 +64,20 @@ export class AppComponent {
     //   case this.authz.hasRole('tacop'):
     //     await this.router.navigate(['/maptool/map']); break;
     // }
+  }
+
+  private async connectToLsxGateway(): Promise<void> {
+    const token = this.tokenService.accessToken() || '';
+    if (token) {
+      try {
+        await this.lsxGateway.connect(token);
+        console.debug('Connected to Lsx Gateway');
+      } catch (error) {
+        console.error('Error connecting to Lsx Gateway:', error);
+        setTimeout(async () => {
+          await this.connectToLsxGateway();
+        }, 30000);
+      }
+    }
   }
 }

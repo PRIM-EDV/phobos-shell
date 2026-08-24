@@ -1,0 +1,15 @@
+{
+    "accept_invalid_certificates": true,
+    "feature": {
+        "network": {
+            "incoming": {
+                "mode": "steal",
+                "http_filter": {
+                    "path_filter": "^/(?!api|federation\\.manifest\\.json|phobos\\.manifest\\.json).*"
+                }
+            }
+        },
+        "fs": "local",
+        "env": true
+    }
+}
