@@ -21,7 +21,7 @@ const DEFAULT_AUTH_URL = `${window.location.protocol}//${window.location.hostnam
   providedIn: "root",
 })
 export class TokenService implements ITokenService {
-  public accessToken: WritableSignal<string | null> = signal(localStorage.getItem("access.token"));
+  public accessToken: WritableSignal<string | null> = signal(TokenService.getInitialAccessToken());
   public refreshToken: WritableSignal<string | null> = signal(localStorage.getItem("refresh.token"));
 
   syncAccessToken = this.localStorageSyncEffect(this.accessToken, "access.token");
@@ -42,6 +42,25 @@ export class TokenService implements ITokenService {
     } else {
       this.authApiUrl = authProvider[0].apiUrl.toString();
     }
+  }
+
+  /**
+   * Determines the initial access token value.
+   *
+   */
+  private static getInitialAccessToken(): string | null {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlToken = urlParams.get("access_token");
+
+    if (urlToken) {
+      // urlParams.delete("access_token");
+      // const query = urlParams.toString();
+      // const newUrl = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
+      // window.history.replaceState({}, "", newUrl);
+      return urlToken;
+    }
+
+    return localStorage.getItem("access.token");
   }
 
   /**

@@ -3,4 +3,4 @@ name: phobos-shell
 description: Shell for PhobOS
 type: application
 version: 0.1.0
-appVersion: 2.2.0-alpha.7
+appVersion: 2.2.0
